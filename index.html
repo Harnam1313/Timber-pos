@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Timber & Hardware Manager</title>
+  
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="TimberPOS" />
+
+  <!-- Firebase Cloud SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <!-- PDF Engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --accent: #d97706;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 110px; }
+
+    header { background: var(--primary); color: white; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 30; }
+    header h1 { font-size: 1.15rem; font-weight: 700; }
+    .status-badge { font-size: 0.75rem; background: #22c55e; color: white; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+    
+    .nav-tabs { display: flex; background: white; border-bottom: 1px solid var(--border); }
+    .nav-tab { flex: 1; padding: 12px 0; border: none; background: none; font-weight: 600; font-size: 0.95rem; color: var(--text-muted); border-bottom: 3px solid transparent; text-align: center; }
+    .nav-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    .container { padding: 14px; max-width: 1200px; margin: 0 auto; }
+    .hidden { display: none !important; }
+
+    .filter-section { background: white; padding: 12px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 12px; }
+    .search-input { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; margin-bottom: 10px; }
+    
+    .pill-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .pill-scroll::-webkit-scrollbar { display: none; }
+    .pill { padding: 6px 14px; background: #f1f5f9; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: #334155; white-space: nowrap; border: 1px solid #cbd5e1; cursor: pointer; }
+    .pill.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    .table-card { background: white; border-radius: 10px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; min-width: 700px; }
+    th { background: #f8fafc; color: var(--text-muted); padding: 10px 12px; font-weight: 600; border-bottom: 1px solid var(--border); }
+    td { padding: 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+    tr:hover { background: #f8fafc; }
+
+    .badge { padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+    .badge-ply { background: #e0e7ff; color: #3730a3; }
+    .badge-door { background: #fef3c7; color: #92400e; }
+    .badge-hard { background: #dcfce7; color: #166534; }
+    .stock-tag { font-weight: 700; color: #15803d; }
+    .stock-tag.low { color: #b91c1c; }
+
+    .btn-add { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; cursor: pointer; }
+    .btn-add:active { transform: scale(0.95); }
+
+    .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 12px 18px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -4px 14px rgba(0,0,0,0.08); z-index: 40; }
+    .btn { background: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer; }
+    .btn-danger { background: #ef4444; }
+
+    .form-box { background: white; padding: 16px; border-radius: 10px; border: 1px solid var(--border); max-width: 600px; margin: 0 auto; }
+    .form-group { margin-bottom: 12px; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; color: #334155; }
+    input, select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; }
+    .dim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Timber & Hardware Manager</h1>
+    <span class="status-badge" id="sync-status">Connecting...</span>
+  </header>
+
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchNav('pos')">Point of Sale (POS)</button>
+    <button class="nav-tab" onclick="switchNav('add')">Add Stock Item</button>
+  </div>
+
+  <div id="tab-pos" class="container">
+    <div class="filter-section">
+      <input type="text" id="search-box" class="search-input" placeholder="Search item, grade, brand, size (e.g. Gurjan, 8x4, Marine)..." oninput="applyFilters()" />
+      
+      <label style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">CATEGORIES & GRADES</label>
+      <div class="pill-scroll" style="margin-bottom: 10px;">
+        <div class="pill active" onclick="setCategoryFilter('ALL', this)">All Categories</div>
+        <div class="pill" onclick="setCategoryFilter('Marine / BWP', this)">Plywood (Marine/BWP)</div>
+        <div class="pill" onclick="setCategoryFilter('MR Grade', this)">Plywood (MR Grade)</div>
+        <div class="pill" onclick="setCategoryFilter('Door', this)">Flush Doors</div>
+        <div class="pill" onclick="setCategoryFilter('Hardware', this)">Hardware & Fittings</div>
+      </div>
+
+      <label style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">QUICK SIZE FILTER</label>
+      <div class="pill-scroll">
+        <div class="pill active" onclick="setSizeFilter('ALL', this)">All Sizes</div>
+        <div class="pill" onclick="setSizeFilter('8x4', this)">8x4 ft</div>
+        <div class="pill" onclick="setSizeFilter('7x4', this)">7x4 ft</div>
+        <div class="pill" onclick="setSizeFilter('6x4', this)">6x4 ft</div>
+        <div class="pill" onclick="setSizeFilter('7x3', this)">7x3 ft</div>
+        <div class="pill" onclick="setSizeFilter('6x3', this)">6x3 ft</div>
+        <div class="pill" onclick="setSizeFilter('8x3', this)">8x3 ft</div>
+        <div class="pill" onclick="setSizeFilter('6x2.5', this)">6x2.5 ft</div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Item Name</th>
+              <th>Grade / Brand</th>
+              <th>Dimensions</th>
+              <th>Area / Unit</th>
+              <th>Rate</th>
+              <th>Calculated Price</th>
+              <th>Stock</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="inventory-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-add" class="container hidden">
+    <div class="form-box">
+      <h2 style="font-size: 1.1rem; margin-bottom: 14px;">Add New Inventory Item</h2>
+      
+      <div class="form-group">
+        <label>Item Name</label>
+        <input type="text" id="add-name" placeholder="e.g. Gurjan 18mm Club, Brass Hinges" />
+      </div>
+
+      <div class="form-group">
+        <label>Category Type</label>
+        <select id="add-type" onchange="toggleFormMode()">
+          <option value="plywood">Plywood (Sq.Ft Calculation - Feet)</option>
+          <option value="door">Flush Door (Sq.Ft Calculation - Inches)</option>
+          <option value="hardware">Hardware & Fittings (Per Unit / Set / Pair)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Grade / Brand / Quality</label>
+        <input type="text" id="add-grade" placeholder="e.g. Marine / BWP, MR Grade, Godrej, Brass Antique" />
+      </div>
+
+      <div id="form-ply-box">
+        <div class="form-group">
+          <label>Plywood Dimensions (Feet)</label>
+          <div class="dim-grid">
+            <input type="number" step="0.1" id="add-ply-l" placeholder="Length (e.g. 8)" oninput="calcAddPrice()" />
+            <input type="number" step="0.1" id="add-ply-w" placeholder="Width (e.g. 4)" oninput="calcAddPrice()" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Rate per Sq. Ft. (₹)</label>
+          <input type="number" id="add-ply-rate" placeholder="e.g. 75" oninput="calcAddPrice()" />
+        </div>
+      </div>
+
+      <div id="form-door-box" class="hidden">
+        <div class="form-group">
+          <label>Door Dimensions (Inches)</label>
+          <div class="dim-grid">
+            <input type="number" step="0.5" id="add-door-w" placeholder="Width (e.g. 32)" oninput="calcDoorAddPrice()" />
+            <input type="number" step="0.5" id="add-door-h" placeholder="Height (e.g. 82)" oninput="calcDoorAddPrice()" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Rate per Sq. Ft. (₹)</label>
+          <input type="number" id="add-door-rate" placeholder="e.g. 110" oninput="calcDoorAddPrice()" />
+        </div>
+      </div>
+
+      <div id="form-hard-box" class="hidden">
+        <div class="form-group">
+          <label>Unit of Measure</label>
+          <select id="add-hard-unit">
+            <option value="Piece">Per Piece</option>
+            <option value="Pair">Per Pair</option>
+            <option value="Set">Per Set</option>
+            <option value="Box">Per Box</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Rate per Unit (₹)</label>
+          <input type="number" id="add-hard-rate" placeholder="e.g. 320" oninput="calcHardPrice()" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Final Selling Price per Piece/Sheet (₹)</label>
+        <input type="number" id="add-price" placeholder="Calculated Auto Price" />
+      </div>
+
+      <div class="form-group">
+        <label>Stock Quantity</label>
+        <input type="number" id="add-stock" placeholder="e.g. 50" />
+      </div>
+
+      <button class="btn" style="width: 100%;" onclick="saveItem()">Save & Sync Everywhere</button>
+    </div>
+  </div>
+
+  <div class="cart-bar" id="cart-bar">
+    <div>
+      <div style="font-size: 0.8rem; color: var(--text-muted);" id="cart-item-count">0 items selected</div>
+      <div style="font-size: 1.15rem; font-weight: 800; color: var(--primary);" id="cart-total-amount">₹0</div>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <button class="btn btn-danger" onclick="clearCart()">Clear</button>
+      <button class="btn" onclick="generateInvoicePDF()">Print / PDF Bill</button>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB8tYcclvFwwlqcB1hclg9b5xDk8M_5hyI",
+      authDomain: "timber--pos-live.firebaseapp.com",
+      projectId: "timber--pos-live",
+      storageBucket: "timber--pos-live.firebasestorage.app",
+      messagingSenderId: "274511450488",
+      appId: "1:274511450488:web:8ef639fa1989c01029388d"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    db.enablePersistence({ synchronizeTabs: true }).catch(err => {
+      console.warn("Persistence notice:", err.code);
+    });
+
+    const defaultCatalog = [
+      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", dimension: "8x4", area: "32 sq.ft", rateStr: "₹85/sqft", price: 2720, stock: 35 },
+      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", dimension: "7x4", area: "28 sq.ft", rateStr: "₹85/sqft", price: 2380, stock: 25 },
+      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", dimension: "6x4", area: "24 sq.ft", rateStr: "₹85/sqft", price: 2040, stock: 20 },
+      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", dimension: "8x3", area: "24 sq.ft", rateStr: "₹85/sqft", price: 2040, stock: 15 },
+      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", dimension: "7x3", area: "21 sq.ft", rateStr: "₹85/sqft", price: 1785, stock: 20 },
+      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", dimension: "6x3", area: "18 sq.ft", rateStr: "₹85/sqft", price: 1530, stock: 30 },
+      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", dimension: "6x2.5", area: "15 sq.ft", rateStr: "₹85/sqft", price: 1275, stock: 20 },
+      { name: "Commercial Ply 18mm", type: "plywood", grade: "MR Grade", dimension: "8x4", area: "32 sq.ft", rateStr: "₹55/sqft", price: 1760, stock: 45 },
+      { name: "Commercial Ply 18mm", type: "plywood", grade: "MR Grade", dimension: "7x4", area: "28 sq.ft", rateStr: "₹55/sqft", price: 1540, stock: 30 },
+      { name: "Commercial Ply 18mm", type: "plywood", grade: "MR Grade", dimension: "6x4", area: "24 sq.ft", rateStr: "₹55/sqft", price: 1320, stock: 25 },
+      { name: "Commercial Ply 18mm", type: "plywood", grade: "MR Grade", dimension: "7x3", area: "21 sq.ft", rateStr: "₹55/sqft", price: 1155, stock: 20 },
+      { name: "Commercial Ply 18mm", type: "plywood", grade: "MR Grade", dimension: "6x3", area: "18 sq.ft", rateStr: "₹55/sqft", price: 990, stock: 40 },
+      { name: "Commercial Ply 18mm", type: "plywood", grade: "MR Grade", dimension: "6x2.5", area: "15 sq.ft", rateStr: "₹55/sqft", price: 825, stock: 25 },
+      { name: "Flush Door Solid Pine", type: "door", grade: "Pine Core", dimension: '32"x82"', area: "18.22 sq.ft", rateStr: "₹105/sqft", price: 1913, stock: 12 },
+      { name: "Flush Door Solid Pine", type: "door", grade: "Pine Core", dimension: '36"x84"', area: "21.00 sq.ft", rateStr: "₹105/sqft", price: 2205, stock: 10 },
+      { name: "Hydraulic Auto Hinges", type: "hardware", grade: "Hettich Type", dimension: "-", area: "1 Pair", rateStr: "₹220/Pair", price: 220, stock: 150 },
+      { name: "Telescopic Channel 18 inch", type: "hardware", grade: "Heavy Duty", dimension: "18 inch", area: "1 Set", rateStr: "₹380/Set", price: 380, stock: 60 },
+      { name: "Tower Bolt Brass Antique", type: "hardware", grade: "Brass Premium", dimension: "8 inch", area: "1 Pc", rateStr: "₹260/Piece", price: 260, stock: 45 }
+    ];
+
+    let inventory = [];
+    let cart = {};
+    let activeCategory = 'ALL';
+    let activeSize = 'ALL';
+
+    db.collection("inventory").onSnapshot(snapshot => {
+      if (snapshot.empty) {
+        const batch = db.batch();
+        defaultCatalog.forEach(item => {
+          const docRef = db.collection("inventory").doc();
+          batch.set(docRef, item);
+        });
+        batch.commit();
+      } else {
+        inventory = [];
+        snapshot.forEach(doc => {
+          inventory.push({ id: doc.id, ...doc.data() });
+        });
+        applyFilters();
+      }
+
+      const isOnline = navigator.onLine;
+      const status = document.getElementById("sync-status");
+      status.innerText = isOnline ? "Live Synced" : "Offline Cached";
+      status.style.background = isOnline ? "#22c55e" : "#f59e0b";
+    });
+
+    function switchNav(tab) {
+      document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+      if (tab === 'pos') {
+        document.getElementById('tab-pos').classList.remove('hidden');
+        document.getElementById('tab-add').classList.add('hidden');
+        document.getElementById('cart-bar').classList.remove('hidden');
+        event.target.classList.add('active');
+      } else {
+        document.getElementById('tab-pos').classList.add('hidden');
+        document.getElementById('tab-add').classList.remove('hidden');
+        document.getElementById('cart-bar').classList.add('hidden');
+        event.target.classList.add('active');
+      }
+    }
+
+    function toggleFormMode() {
+      const type = document.getElementById("add-type").value;
+      document.getElementById("form-ply-box").classList.toggle("hidden", type !== "plywood");
+      document.getElementById("form-door-box").classList.toggle("hidden", type !== "door");
+      document.getElementById("form-hard-box").classList.toggle("hidden", type !== "hardware");
+      document.getElementById("add-price").value = "";
+    }
+
+    function calcAddPrice() {
+      const l = parseFloat(document.getElementById("add-ply-l").value) || 0;
+      const w = parseFloat(document.getElementById("add-ply-w").value) || 0;
+      const r = parseFloat(document.getElementById("add-ply-rate").value) || 0;
+      if (l && w && r) document.getElementById("add-price").value = Math.round(l * w * r);
+    }
+
+    function calcDoorAddPrice() {
+      const w = parseFloat(document.getElementById("add-door-w").value) || 0;
+      const h = parseFloat(document.getElementById("add-door-h").value) || 0;
+      const r = parseFloat(document.getElementById("add-door-rate").value) || 0;
+      if (w && h && r) document.getElementById("add-price").value = Math.round(((w * h) / 144) * r);
+    }
+
+    function calcHardPrice() {
+      const r = parseFloat(document.getElementById("add-hard-rate").value) || 0;
+      document.getElementById("add-price").value = r;
+    }
+
+    function saveItem() {
+      const name = document.getElementById("add-name").value;
+      const type = document.getElementById("add-type").value;
+      const grade = document.getElementById("add-grade").value || "Standard";
+      const price = parseFloat(document.getElementById("add-price").value);
+      const stock = parseInt(document.getElementById("add-stock").value);
+
+      if (!name || isNaN(price) || isNaN(stock)) {
+        alert("Please fill all required item details.");
+        return;
+      }
+
+      let dimension = "-", area = "-", rateStr = "-";
+      if (type === "plywood") {
+        const l = document.getElementById("add-ply-l").value;
+        const w = document.getElementById("add-ply-w").value;
+        const r = document.getElementById("add-ply-rate").value;
+        dimension = `${l}x${w}`;
+        area = `${l * w} sq.ft`;
+        rateStr = `₹${r}/sqft`;
+      } else if (type === "door") {
+        const w = document.getElementById("add-door-w").value;
+        const h = document.getElementById("add-door-h").value;
+        const r = document.getElementById("add-door-rate").value;
+        dimension = `${w}"x${h}"`;
+        area = `${((w * h) / 144).toFixed(2)} sq.ft`;
+        rateStr = `₹${r}/sqft`;
+      } else {
+        const u = document.getElementById("add-hard-unit").value;
+        const r = document.getElementById("add-hard-rate").value;
+        dimension = "-";
+        area = `1 ${u}`;
+        rateStr = `₹${r}/${u}`;
+      }
+
+      db.collection("inventory").add({ name, type, grade, dimension, area, rateStr, price, stock }).then(() => {
+        alert("Item saved and synced to all devices!");
+        document.getElementById("add-name").value = "";
+        document.getElementById("add-price").value = "";
+        document.getElementById("add-stock").value = "";
+        switchNav('pos');
+      });
+    }
+
+    function setCategoryFilter(cat, elem) {
+      elem.parentNode.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
+      elem.classList.add("active");
+      activeCategory = cat;
+      applyFilters();
+    }
+
+    function setSizeFilter(sz, elem) {
+      elem.parentNode.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
+      elem.classList.add("active");
+      activeSize = sz;
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const query = document.getElementById("search-box").value.toLowerCase();
+      const tbody = document.getElementById("inventory-table-body");
+      tbody.innerHTML = "";
+
+      const filtered = inventory.filter(item => {
+        const matchSearch = item.name.toLowerCase().includes(query) ||
+                            (item.grade && item.grade.toLowerCase().includes(query)) ||
+                            (item.dimension && item.dimension.toLowerCase().includes(query));
+
+        let matchCat = true;
+        if (activeCategory === 'Marine / BWP') matchCat = item.grade && (item.grade.toLowerCase().includes('marine') || item.grade.toLowerCase().includes('bwp'));
+        else if (activeCategory === 'MR Grade') matchCat = item.grade && item.grade.toLowerCase().includes('mr');
+        else if (activeCategory === 'Door') matchCat = item.type === 'door';
+        else if (activeCategory === 'Hardware') matchCat = item.type === 'hardware';
+
+        let matchSize = true;
+        if (activeSize !== 'ALL') matchSize = item.dimension && item.dimension.includes(activeSize);
+
+        return matchSearch && matchCat && matchSize;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 24px; color: #888;">No matching inventory found.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const tr = document.createElement("tr");
+        let badgeClass = item.type === 'plywood' ? 'badge-ply' : item.type === 'door' ? 'badge-door' : 'badge-hard';
+        tr.innerHTML = `
+          <td><strong>${item.name}</strong></td>
+          <td><span class="badge ${badgeClass}">${item.grade}</span></td>
+          <td><strong>${item.dimension}</strong></td>
+          <td>${item.area}</td>
+          <td>${item.rateStr}</td>
+          <td><strong style="color: var(--primary);">₹${item.price}</strong></td>
+          <td><span class="stock-tag ${item.stock <= 5 ? 'low' : ''}">${item.stock} in stock</span></td>
+          <td><button class="btn-add" onclick="addToBill('${item.id}')">+ Add</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function addToBill(id) {
+      const item = inventory.find(i => i.id === id);
+      if (!item || item.stock <= 0) {
+        alert("Item is out of stock!");
+        return;
+      }
+      if (cart[id]) {
+        if (cart[id].qty < item.stock) cart[id].qty++;
+        else alert("Cannot exceed current stock!");
+      } else {
+        cart[id] = { ...item, qty: 1 };
+      }
+      updateCartDisplay();
+    }
+
+    function clearCart() {
+      cart = {};
+      updateCartDisplay();
+    }
+
+    function updateCartDisplay() {
+      let total = 0, count = 0;
+      for (let id in cart) {
+        total += cart[id].price * cart[id].qty;
+        count += cart[id].qty;
+      }
+      document.getElementById("cart-total-amount").innerText = `₹${total}`;
+      document.getElementById("cart-item-count").innerText = `${count} items in bill`;
+    }
+
+    function generateInvoicePDF() {
+      const keys = Object.keys(cart);
+      if (keys.length === 0) {
+        alert("Please add items to the bill first.");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      let y = 18;
+
+      doc.setFontSize(15);
+      doc.text("TIMBER & HARDWARE INVOICE", 14, y);
+      y += 8;
+      doc.setFontSize(9);
+      doc.text(`Date: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 14, y);
+      y += 6;
+      doc.line(14, y, 196, y);
+      y += 6;
+
+      doc.setFontSize(9);
+      doc.text("Item / Spec", 14, y);
+      doc.text("Size", 80, y);
+      doc.text("Rate", 110, y);
+      doc.text("Qty", 140, y);
+      doc.text("Total", 175, y);
+      y += 4;
+      doc.line(14, y, 196, y);
+      y += 6;
+
+      let grandTotal = 0;
+      const batch = db.batch();
+
+      keys.forEach((id) => {
+        const item = cart[id];
+        const lineTotal = item.price * item.qty;
+        grandTotal += lineTotal;
+
+        doc.text(`${item.name} (${item.grade})`.substring(0, 30), 14, y);
+        doc.text(item.dimension || "-", 80, y);
+        doc.text(item.rateStr, 110, y);
+        doc.text(String(item.qty), 140, y);
+        doc.text(`Rs. ${lineTotal}`, 175, y);
+        y += 7;
+
+        const docRef = db.collection("inventory").doc(item.id);
+        batch.update(docRef, { stock: firebase.firestore.FieldValue.increment(-item.qty) });
+      });
+
+      y += 2;
+      doc.line(14, y, 196, y);
+      y += 8;
+      doc.setFontSize(11);
+      doc.text(`Grand Total: Rs. ${grandTotal}`, 135, y);
+
+      doc.save(`Invoice_${Date.now()}.pdf`);
+
+      batch.commit().then(() => {
+        cart = {};
+        updateCartDisplay();
+        alert("Invoice generated and stock updated on all connected devices!");
+      });
+    }
+  </script>
+</body>
+</html>
