@@ -40,20 +40,41 @@
     .container { padding: 14px; max-width: 1200px; margin: 0 auto; }
     .hidden { display: none !important; }
 
+    /* Filter & View Switcher Bar */
     .filter-section { background: white; padding: 12px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 12px; }
-    .search-input { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; margin-bottom: 10px; }
+    .top-controls { display: flex; gap: 8px; margin-bottom: 10px; }
+    .search-input { flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; }
     
+    .view-toggle { display: flex; background: #f1f5f9; border-radius: 8px; padding: 2px; border: 1px solid var(--border); }
+    .view-btn { border: none; background: none; padding: 8px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; cursor: pointer; color: var(--text-muted); }
+    .view-btn.active { background: white; color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
     .pill-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
     .pill-scroll::-webkit-scrollbar { display: none; }
     .pill { padding: 6px 14px; background: #f1f5f9; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: #334155; white-space: nowrap; border: 1px solid #cbd5e1; cursor: pointer; }
     .pill.active { background: var(--primary); color: white; border-color: var(--primary); }
 
+    /* 1. TABLE VIEW */
     .table-card { background: white; border-radius: 10px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
     .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; min-width: 700px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; min-width: 800px; }
     th { background: #f8fafc; color: var(--text-muted); padding: 10px 12px; font-weight: 600; border-bottom: 1px solid var(--border); }
     td { padding: 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
     tr:hover { background: #f8fafc; }
+
+    /* 2. BUTTON / CARD GRID VIEW */
+    .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+    .item-card-btn { background: white; border: 1.5px solid var(--border); border-radius: 12px; padding: 12px; text-align: left; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
+    .item-card-btn:active { transform: scale(0.97); border-color: var(--primary); }
+    .card-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; line-height: 1.2; }
+    .card-meta { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px; }
+    .card-price { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 6px; }
+
+    /* Action Buttons */
+    .action-group { display: flex; gap: 4px; align-items: center; }
+    .btn-add { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; cursor: pointer; }
+    .btn-edit { background: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; }
+    .btn-del { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; padding: 6px 8px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; }
 
     .badge { padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
     .badge-ply { background: #e0e7ff; color: #3730a3; }
@@ -62,18 +83,21 @@
     .stock-tag { font-weight: 700; color: #15803d; }
     .stock-tag.low { color: #b91c1c; }
 
-    .btn-add { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; cursor: pointer; }
-    .btn-add:active { transform: scale(0.95); }
-
+    /* Cart Floating Dock */
     .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 12px 18px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -4px 14px rgba(0,0,0,0.08); z-index: 40; }
     .btn { background: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer; }
     .btn-danger { background: #ef4444; }
 
+    /* Forms & Modal */
     .form-box { background: white; padding: 16px; border-radius: 10px; border: 1px solid var(--border); max-width: 600px; margin: 0 auto; }
     .form-group { margin-bottom: 12px; }
     label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; color: #334155; }
     input, select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; }
     .dim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    /* Edit Modal Backdrop */
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
+    .modal-card { background: white; width: 100%; max-width: 480px; border-radius: 12px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
   </style>
 </head>
 <body>
@@ -88,9 +112,18 @@
     <button class="nav-tab" onclick="switchNav('add')">Add Stock Item</button>
   </div>
 
+  <!-- TAB 1: POS Screen -->
   <div id="tab-pos" class="container">
     <div class="filter-section">
-      <input type="text" id="search-box" class="search-input" placeholder="Search item, grade, brand, size (e.g. Gurjan, 8x4, Marine)..." oninput="applyFilters()" />
+      <div class="top-controls">
+        <input type="text" id="search-box" class="search-input" placeholder="Search item, grade, brand, size..." oninput="applyFilters()" />
+        
+        <!-- Toggle Between Table and Button Grid -->
+        <div class="view-toggle">
+          <button class="view-btn active" id="btn-view-table" onclick="setViewMode('table')">Table</button>
+          <button class="view-btn" id="btn-view-grid" onclick="setViewMode('grid')">Buttons</button>
+        </div>
+      </div>
       
       <label style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">CATEGORIES & GRADES</label>
       <div class="pill-scroll" style="margin-bottom: 10px;">
@@ -114,7 +147,8 @@
       </div>
     </div>
 
-    <div class="table-card">
+    <!-- VIEW 1: Structured Table Mode -->
+    <div id="wrapper-table-view" class="table-card">
       <div class="table-wrap">
         <table>
           <thead>
@@ -126,15 +160,19 @@
               <th>Rate</th>
               <th>Calculated Price</th>
               <th>Stock</th>
-              <th>Action</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody id="inventory-table-body"></tbody>
         </table>
       </div>
     </div>
+
+    <!-- VIEW 2: Touch Button / Tile Grid Mode -->
+    <div id="wrapper-grid-view" class="grid-view hidden"></div>
   </div>
 
+  <!-- TAB 2: Add Inventory -->
   <div id="tab-add" class="container hidden">
     <div class="form-box">
       <h2 style="font-size: 1.1rem; margin-bottom: 14px;">Add New Inventory Item</h2>
@@ -216,6 +254,43 @@
     </div>
   </div>
 
+  <!-- EDIT ITEM MODAL DIALOG -->
+  <div id="edit-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <h3 style="margin-bottom: 12px; font-size: 1.1rem;">Edit Inventory Item</h3>
+      <input type="hidden" id="edit-id" />
+      <div class="form-group">
+        <label>Item Name</label>
+        <input type="text" id="edit-name" />
+      </div>
+      <div class="form-group">
+        <label>Grade / Brand</label>
+        <input type="text" id="edit-grade" />
+      </div>
+      <div class="form-group">
+        <label>Dimensions / Specs</label>
+        <input type="text" id="edit-dim" />
+      </div>
+      <div class="form-group">
+        <label>Rate Text (e.g. ₹85/sqft or ₹220/Pair)</label>
+        <input type="text" id="edit-rate" />
+      </div>
+      <div class="form-group">
+        <label>Price per Unit (₹)</label>
+        <input type="number" id="edit-price" />
+      </div>
+      <div class="form-group">
+        <label>Current Stock Quantity</label>
+        <input type="number" id="edit-stock" />
+      </div>
+      <div style="display: flex; gap: 8px; margin-top: 14px;">
+        <button class="btn btn-danger" style="flex: 1;" onclick="closeEditModal()">Cancel</button>
+        <button class="btn" style="flex: 1;" onclick="submitEdit()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart / Checkout Dock -->
   <div class="cart-bar" id="cart-bar">
     <div>
       <div style="font-size: 0.8rem; color: var(--text-muted);" id="cart-item-count">0 items selected</div>
@@ -228,6 +303,7 @@
   </div>
 
   <script>
+    // --- 1. FIREBASE CONFIGURATION ---
     const firebaseConfig = {
       apiKey: "AIzaSyB8tYcclvFwwlqcB1hclg9b5xDk8M_5hyI",
       authDomain: "timber--pos-live.firebaseapp.com",
@@ -240,10 +316,9 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    db.enablePersistence({ synchronizeTabs: true }).catch(err => {
-      console.warn("Persistence notice:", err.code);
-    });
+    db.enablePersistence({ synchronizeTabs: true }).catch(err => console.warn(err));
 
+    // --- 2. PRELOAD CATALOG ---
     const defaultCatalog = [
       { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", dimension: "8x4", area: "32 sq.ft", rateStr: "₹85/sqft", price: 2720, stock: 35 },
       { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", dimension: "7x4", area: "28 sq.ft", rateStr: "₹85/sqft", price: 2380, stock: 25 },
@@ -269,7 +344,9 @@
     let cart = {};
     let activeCategory = 'ALL';
     let activeSize = 'ALL';
+    let currentView = 'table'; // 'table' or 'grid'
 
+    // --- 3. LIVE CLOUD SYNC ---
     db.collection("inventory").onSnapshot(snapshot => {
       if (snapshot.empty) {
         const batch = db.batch();
@@ -280,9 +357,7 @@
         batch.commit();
       } else {
         inventory = [];
-        snapshot.forEach(doc => {
-          inventory.push({ id: doc.id, ...doc.data() });
-        });
+        snapshot.forEach(doc => inventory.push({ id: doc.id, ...doc.data() }));
         applyFilters();
       }
 
@@ -292,6 +367,15 @@
       status.style.background = isOnline ? "#22c55e" : "#f59e0b";
     });
 
+    function setViewMode(mode) {
+      currentView = mode;
+      document.getElementById("btn-view-table").classList.toggle("active", mode === 'table');
+      document.getElementById("btn-view-grid").classList.toggle("active", mode === 'grid');
+      document.getElementById("wrapper-table-view").classList.toggle("hidden", mode !== 'table');
+      document.getElementById("wrapper-grid-view").classList.toggle("hidden", mode !== 'grid');
+      applyFilters();
+    }
+
     function switchNav(tab) {
       document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
       if (tab === 'pos') {
@@ -299,6 +383,7 @@
         document.getElementById('tab-add').classList.add('hidden');
         document.getElementById('cart-bar').classList.remove('hidden');
         event.target.classList.add('active');
+        applyFilters();
       } else {
         document.getElementById('tab-pos').classList.add('hidden');
         document.getElementById('tab-add').classList.remove('hidden');
@@ -378,6 +463,49 @@
       });
     }
 
+    // --- EDIT & DELETE FUNCTIONALITY ---
+    function openEditModal(id) {
+      const item = inventory.find(i => i.id === id);
+      if (!item) return;
+      document.getElementById("edit-id").value = item.id;
+      document.getElementById("edit-name").value = item.name;
+      document.getElementById("edit-grade").value = item.grade || "";
+      document.getElementById("edit-dim").value = item.dimension || "";
+      document.getElementById("edit-rate").value = item.rateStr || "";
+      document.getElementById("edit-price").value = item.price || 0;
+      document.getElementById("edit-stock").value = item.stock || 0;
+      document.getElementById("edit-modal").classList.remove("hidden");
+    }
+
+    function closeEditModal() {
+      document.getElementById("edit-modal").classList.add("hidden");
+    }
+
+    function submitEdit() {
+      const id = document.getElementById("edit-id").value;
+      const name = document.getElementById("edit-name").value;
+      const grade = document.getElementById("edit-grade").value;
+      const dimension = document.getElementById("edit-dim").value;
+      const rateStr = document.getElementById("edit-rate").value;
+      const price = parseFloat(document.getElementById("edit-price").value) || 0;
+      const stock = parseInt(document.getElementById("edit-stock").value) || 0;
+
+      db.collection("inventory").doc(id).update({
+        name, grade, dimension, rateStr, price, stock
+      }).then(() => {
+        closeEditModal();
+        alert("Item updated successfully!");
+      });
+    }
+
+    function deleteItem(id, name) {
+      if (confirm(`Are you sure you want to delete "${name}" from stock?`)) {
+        db.collection("inventory").doc(id).delete().then(() => {
+          alert("Item deleted!");
+        });
+      }
+    }
+
     function setCategoryFilter(cat, elem) {
       elem.parentNode.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
       elem.classList.add("active");
@@ -395,7 +523,9 @@
     function applyFilters() {
       const query = document.getElementById("search-box").value.toLowerCase();
       const tbody = document.getElementById("inventory-table-body");
+      const grid = document.getElementById("wrapper-grid-view");
       tbody.innerHTML = "";
+      grid.innerHTML = "";
 
       const filtered = inventory.filter(item => {
         const matchSearch = item.name.toLowerCase().includes(query) ||
@@ -416,12 +546,15 @@
 
       if (filtered.length === 0) {
         tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 24px; color: #888;">No matching inventory found.</td></tr>`;
+        grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #888; padding: 24px;">No matching items found.</p>`;
         return;
       }
 
       filtered.forEach(item => {
-        const tr = document.createElement("tr");
         let badgeClass = item.type === 'plywood' ? 'badge-ply' : item.type === 'door' ? 'badge-door' : 'badge-hard';
+
+        // 1. Render Table Rows
+        const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><strong>${item.name}</strong></td>
           <td><span class="badge ${badgeClass}">${item.grade}</span></td>
@@ -430,9 +563,35 @@
           <td>${item.rateStr}</td>
           <td><strong style="color: var(--primary);">₹${item.price}</strong></td>
           <td><span class="stock-tag ${item.stock <= 5 ? 'low' : ''}">${item.stock} in stock</span></td>
-          <td><button class="btn-add" onclick="addToBill('${item.id}')">+ Add</button></td>
+          <td>
+            <div class="action-group">
+              <button class="btn-add" onclick="addToBill('${item.id}')">+ Add</button>
+              <button class="btn-edit" onclick="openEditModal('${item.id}')">✏️</button>
+              <button class="btn-del" onclick="deleteItem('${item.id}', '${item.name}')">🗑️</button>
+            </div>
+          </td>
         `;
         tbody.appendChild(tr);
+
+        // 2. Render Clickable Touch Grid Cards
+        const card = document.createElement("div");
+        card.className = "item-card-btn";
+        card.innerHTML = `
+          <div onclick="addToBill('${item.id}')">
+            <span class="badge ${badgeClass}" style="margin-bottom: 6px;">${item.grade}</span>
+            <div class="card-title">${item.name}</div>
+            <div class="card-meta">Size: <strong>${item.dimension}</strong> | ${item.area}</div>
+            <div class="card-meta">${item.rateStr}</div>
+            <div class="card-price">₹${item.price}</div>
+            <div class="stock-tag ${item.stock <= 5 ? 'low' : ''}" style="font-size:0.75rem;">Stock: ${item.stock}</div>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-top: 10px; border-top: 1px solid #f1f5f9; padding-top: 6px;">
+            <button class="btn-add" style="flex:1; margin-right:4px;" onclick="addToBill('${item.id}')">+ Add Bill</button>
+            <button class="btn-edit" onclick="openEditModal('${item.id}')">✏️</button>
+            <button class="btn-del" style="margin-left:4px;" onclick="deleteItem('${item.id}', '${item.name}')">🗑️</button>
+          </div>
+        `;
+        grid.appendChild(card);
       });
     }
 
@@ -532,3 +691,4 @@
   </script>
 </body>
 </html>
+
