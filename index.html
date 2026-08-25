@@ -25,6 +25,8 @@
       --border: #e2e8f0;
       --text: #0f172a;
       --text-muted: #64748b;
+      --success: #16a34a;
+      --danger: #dc2626;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 140px; }
@@ -33,8 +35,8 @@
     header h1 { font-size: 1.15rem; font-weight: 700; }
     .status-badge { font-size: 0.75rem; background: #22c55e; color: white; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
     
-    .nav-tabs { display: flex; background: white; border-bottom: 1px solid var(--border); }
-    .nav-tab { flex: 1; padding: 12px 0; border: none; background: none; font-weight: 600; font-size: 0.95rem; color: var(--text-muted); border-bottom: 3px solid transparent; text-align: center; }
+    .nav-tabs { display: flex; background: white; border-bottom: 1px solid var(--border); overflow-x: auto; }
+    .nav-tab { flex: 1; padding: 12px 6px; border: none; background: none; font-weight: 600; font-size: 0.88rem; color: var(--text-muted); border-bottom: 3px solid transparent; text-align: center; white-space: nowrap; cursor: pointer; }
     .nav-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
 
     .container { padding: 14px; max-width: 1200px; margin: 0 auto; }
@@ -49,12 +51,13 @@
     .view-btn { border: none; background: none; padding: 8px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; cursor: pointer; color: var(--text-muted); }
     .view-btn.active { background: white; color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
-    .pill-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .pill-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; scrollbar-width: none; align-items: center; }
     .pill-scroll::-webkit-scrollbar { display: none; }
     .pill { padding: 6px 14px; background: #f1f5f9; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: #334155; white-space: nowrap; border: 1px solid #cbd5e1; cursor: pointer; }
     .pill.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .pill-add-btn { background: #e2e8f0; color: #0f172a; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: none; cursor: pointer; }
 
-    /* Table View */
+    /* Tables */
     .table-card { background: white; border-radius: 10px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
     .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; min-width: 820px; }
@@ -63,7 +66,7 @@
     tr:hover { background: #f8fafc; }
 
     /* Button Grid View */
-    .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 12px; }
+    .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
     .item-card-btn { background: white; border: 1.5px solid var(--border); border-radius: 12px; padding: 12px; text-align: left; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
     .card-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; line-height: 1.2; }
     .card-meta { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px; }
@@ -71,7 +74,8 @@
 
     /* Action Buttons */
     .action-group { display: flex; gap: 4px; align-items: center; }
-    .btn-add { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; cursor: pointer; }
+    .btn-add { background: var(--primary); color: white; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; cursor: pointer; }
+    .btn-restock { background: #dcfce7; color: #166534; border: 1px solid #86efac; padding: 6px 8px; border-radius: 6px; font-weight: 600; font-size: 0.78rem; cursor: pointer; }
     .btn-edit { background: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; }
     .btn-del { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; padding: 6px 8px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; }
 
@@ -82,7 +86,13 @@
     .stock-tag { font-weight: 700; color: #15803d; }
     .stock-tag.low { color: #b91c1c; }
 
-    /* Floating Cart Dock & Quantity Adjustment Bar */
+    /* Summary KPI Cards */
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 12px; }
+    .kpi-card { background: white; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border); }
+    .kpi-title { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+    .kpi-val { font-size: 1.25rem; font-weight: 800; margin-top: 4px; }
+
+    /* Floating Cart Dock */
     .cart-drawer { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 2px solid var(--primary); box-shadow: 0 -4px 16px rgba(0,0,0,0.12); z-index: 40; max-height: 45vh; display: flex; flex-direction: column; }
     .cart-header { padding: 10px 16px; background: #f8fafc; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); font-size: 0.88rem; font-weight: 700; }
     .cart-items-scroll { overflow-y: auto; padding: 8px 16px; flex: 1; }
@@ -94,14 +104,14 @@
     .btn { background: var(--primary); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer; }
     .btn-danger { background: #ef4444; }
 
-    /* Forms & Modal */
+    /* Form Styles */
     .form-box { background: white; padding: 16px; border-radius: 10px; border: 1px solid var(--border); max-width: 600px; margin: 0 auto; }
     .form-group { margin-bottom: 12px; }
     label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; color: #334155; }
     input, select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; }
     .dim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
-    /* Edit Modal */
+    /* Modals */
     .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
     .modal-card { background: white; width: 100%; max-width: 480px; border-radius: 12px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
   </style>
@@ -115,7 +125,8 @@
 
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="switchNav('pos')">Point of Sale (POS)</button>
-    <button class="nav-tab" onclick="switchNav('add')">Add Stock Item</button>
+    <button class="nav-tab" onclick="switchNav('ledger')">Sales & Purchase History</button>
+    <button class="nav-tab" onclick="switchNav('add')">Add New Item</button>
   </div>
 
   <!-- TAB 1: POS Screen -->
@@ -129,26 +140,19 @@
         </div>
       </div>
       
-      <label style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">CATEGORIES & GRADES</label>
-      <div class="pill-scroll" style="margin-bottom: 10px;">
-        <div class="pill active" onclick="setCategoryFilter('ALL', this)">All Categories</div>
-        <div class="pill" onclick="setCategoryFilter('Marine / BWP', this)">Plywood (Marine/BWP)</div>
-        <div class="pill" onclick="setCategoryFilter('MR Grade', this)">Plywood (MR Grade)</div>
-        <div class="pill" onclick="setCategoryFilter('Door', this)">Flush Doors</div>
-        <div class="pill" onclick="setCategoryFilter('Hardware', this)">Hardware & Fittings</div>
+      <!-- Customizable Category Pills -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+        <label style="font-size:0.75rem; color:var(--text-muted);">CATEGORIES & GRADES</label>
+        <button class="pill-add-btn" title="Add Custom Category" onclick="addCustomFilter('category')">+</button>
       </div>
+      <div class="pill-scroll" id="category-pills" style="margin-bottom: 10px;"></div>
 
-      <label style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">QUICK SIZE FILTER</label>
-      <div class="pill-scroll">
-        <div class="pill active" onclick="setSizeFilter('ALL', this)">All Sizes</div>
-        <div class="pill" onclick="setSizeFilter('8x4', this)">8x4 ft</div>
-        <div class="pill" onclick="setSizeFilter('7x4', this)">7x4 ft</div>
-        <div class="pill" onclick="setSizeFilter('6x4', this)">6x4 ft</div>
-        <div class="pill" onclick="setSizeFilter('7x3', this)">7x3 ft</div>
-        <div class="pill" onclick="setSizeFilter('6x3', this)">6x3 ft</div>
-        <div class="pill" onclick="setSizeFilter('8x3', this)">8x3 ft</div>
-        <div class="pill" onclick="setSizeFilter('6x2.5', this)">6x2.5 ft</div>
+      <!-- Customizable Size Pills -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+        <label style="font-size:0.75rem; color:var(--text-muted);">QUICK SIZE FILTER</label>
+        <button class="pill-add-btn" title="Add Custom Size" onclick="addCustomFilter('size')">+</button>
       </div>
+      <div class="pill-scroll" id="size-pills"></div>
     </div>
 
     <!-- VIEW 1: Table -->
@@ -176,10 +180,82 @@
     <div id="wrapper-grid-view" class="grid-view hidden"></div>
   </div>
 
-  <!-- TAB 2: Add Inventory -->
+  <!-- TAB 2: HISTORY & LEDGER TAB -->
+  <div id="tab-ledger" class="container hidden">
+    <!-- KPI Overview -->
+    <div class="summary-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Total Sales</div>
+        <div class="kpi-val" style="color:var(--success);" id="kpi-total-sales">₹0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Total Purchases</div>
+        <div class="kpi-val" style="color:var(--accent);" id="kpi-total-purchases">₹0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Est. Gross Profit</div>
+        <div class="kpi-val" style="color:var(--primary);" id="kpi-gross-profit">₹0</div>
+      </div>
+    </div>
+
+    <!-- History Filters & Search -->
+    <div class="filter-section">
+      <div class="top-controls">
+        <input type="text" id="ledger-search" class="search-input" placeholder="Search Customer / Supplier / Product..." oninput="applyLedgerFilters()" />
+        <select id="ledger-type-filter" style="max-width:140px;" onchange="applyLedgerFilters()">
+          <option value="ALL">All Entries</option>
+          <option value="SALE">Sales Only</option>
+          <option value="PURCHASE">Purchases Only</option>
+        </select>
+      </div>
+      <div class="dim-grid" style="margin-bottom:8px;">
+        <div>
+          <label style="font-size:0.75rem;">From Date</label>
+          <input type="date" id="ledger-date-from" onchange="applyLedgerFilters()" />
+        </div>
+        <div>
+          <label style="font-size:0.75rem;">To Date</label>
+          <input type="date" id="ledger-date-to" onchange="applyLedgerFilters()" />
+        </div>
+      </div>
+      <div class="dim-grid">
+        <div>
+          <label style="font-size:0.75rem;">Sort By</label>
+          <select id="ledger-sort" onchange="applyLedgerFilters()">
+            <option value="date-desc">Date (Newest First)</option>
+            <option value="date-asc">Date (Oldest First)</option>
+            <option value="amount-desc">Amount (High to Low)</option>
+            <option value="amount-asc">Amount (Low to High)</option>
+            <option value="party-asc">Party Name (A-Z)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Table -->
+    <div class="table-card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th>Type</th>
+              <th>Party (Customer / Supplier)</th>
+              <th>Items & Breakdown</th>
+              <th>Quantity</th>
+              <th>Total Amount</th>
+            </tr>
+          </thead>
+          <tbody id="ledger-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: Add Inventory Item -->
   <div id="tab-add" class="container hidden">
     <div class="form-box">
-      <h2 style="font-size: 1.1rem; margin-bottom: 14px;">Add New Inventory Item</h2>
+      <h2 style="font-size: 1.1rem; margin-bottom: 14px;">Add New Item</h2>
       
       <div class="form-group">
         <label>Item Name</label>
@@ -200,7 +276,6 @@
         <input type="text" id="add-grade" placeholder="e.g. Marine / BWP, MR Grade, Godrej, Brass Antique" />
       </div>
 
-      <!-- Plywood Dimensions & Separate Rates -->
       <div id="form-ply-box">
         <div class="form-group">
           <label>Plywood Dimensions (Feet)</label>
@@ -221,7 +296,6 @@
         </div>
       </div>
 
-      <!-- Flush Door Dimensions & Separate Rates -->
       <div id="form-door-box" class="hidden">
         <div class="form-group">
           <label>Door Dimensions (Inches)</label>
@@ -242,7 +316,6 @@
         </div>
       </div>
 
-      <!-- Hardware Units & Separate Rates -->
       <div id="form-hard-box" class="hidden">
         <div class="form-group">
           <label>Unit of Measure</label>
@@ -279,7 +352,34 @@
     </div>
   </div>
 
-  <!-- EDIT MODAL WITH LIVE RE-CALCULATOR -->
+  <!-- RESTOCK QUICK MODAL -->
+  <div id="restock-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <h3 style="margin-bottom: 6px; font-size: 1.1rem;">Add Stock / Inward Entry</h3>
+      <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:12px;" id="restock-item-name"></p>
+      <input type="hidden" id="restock-id" />
+      
+      <div class="form-group">
+        <label>Supplier / Vendor Name (Optional)</label>
+        <input type="text" id="restock-supplier" placeholder="e.g. Century Ply Agency, Local Mill" />
+      </div>
+      <div class="form-group">
+        <label>Incoming Stock Quantity to Add (+)</label>
+        <input type="number" id="restock-qty" placeholder="e.g. 25" />
+      </div>
+      <div class="form-group">
+        <label>Purchase Rate / Cost per Unit (₹)</label>
+        <input type="number" id="restock-cost" placeholder="Purchase price per unit" />
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-top: 14px;">
+        <button class="btn btn-danger" style="flex: 1;" onclick="closeRestockModal()">Cancel</button>
+        <button class="btn" style="flex: 1; background:var(--success);" onclick="submitRestock()">Confirm Stock Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT MODAL -->
   <div id="edit-modal" class="modal-overlay hidden">
     <div class="modal-card">
       <h3 style="margin-bottom: 12px; font-size: 1.1rem;">Edit Product & Rates</h3>
@@ -295,7 +395,6 @@
         <input type="text" id="edit-grade" />
       </div>
       
-      <!-- Plywood/Door Dynamic Dimensions in Edit -->
       <div id="edit-dim-box" class="form-group">
         <label>Dimensions</label>
         <div class="dim-grid">
@@ -330,7 +429,26 @@
     </div>
   </div>
 
-  <!-- FLOATING CART DOCK WITH +/- STEPPERS -->
+  <!-- CHECKOUT / CUSTOMER NAME MODAL -->
+  <div id="checkout-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <h3 style="margin-bottom: 12px; font-size: 1.1rem;">Customer & Billing Details</h3>
+      <div class="form-group">
+        <label>Customer Name / Party</label>
+        <input type="text" id="customer-name" placeholder="e.g. Ramesh Kumar, Sharma Woodworks" />
+      </div>
+      <div class="form-group">
+        <label>Customer Contact / Mobile (Optional)</label>
+        <input type="tel" id="customer-phone" placeholder="e.g. 9876543210" />
+      </div>
+      <div style="display:flex; gap:8px; margin-top:14px;">
+        <button class="btn btn-danger" style="flex:1;" onclick="closeCheckoutModal()">Cancel</button>
+        <button class="btn" style="flex:1;" onclick="confirmAndPrintBill()">Generate & Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING CART DOCK -->
   <div class="cart-drawer" id="cart-drawer">
     <div class="cart-header">
       <span id="cart-item-count">0 items in bill</span>
@@ -341,7 +459,7 @@
     </div>
     <div class="cart-footer">
       <button class="btn btn-danger" style="padding:8px 14px; font-size:0.85rem;" onclick="clearCart()">Clear</button>
-      <button class="btn" onclick="generateInvoicePDF()">Print / PDF Bill</button>
+      <button class="btn" onclick="openCheckoutModal()">Print / PDF Bill</button>
     </div>
   </div>
 
@@ -358,10 +476,12 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-
     db.enablePersistence({ synchronizeTabs: true }).catch(err => console.warn(err));
 
-    // --- 2. PRELOAD CATALOG WITH PURCHASE AND SELLING RATES ---
+    // --- 2. DEFAULT CONFIG & FILTER PILLS ---
+    let categoriesList = ['ALL', 'Marine / BWP', 'MR Grade', 'Door', 'Hardware'];
+    let sizesList = ['ALL', '8x4', '7x4', '6x4', '7x3', '6x3', '8x3', '6x2.5'];
+
     const defaultCatalog = [
       { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", l: 8, w: 4, dimension: "8x4", area: "32 sq.ft", purchaseRate: 70, rateVal: 85, rateStr: "₹85/sqft", price: 2720, stock: 35 },
       { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", l: 7, w: 4, dimension: "7x4", area: "28 sq.ft", purchaseRate: 70, rateVal: 85, rateStr: "₹85/sqft", price: 2380, stock: 25 },
@@ -374,12 +494,13 @@
     ];
 
     let inventory = [];
+    let transactions = [];
     let cart = {};
     let activeCategory = 'ALL';
     let activeSize = 'ALL';
     let currentView = 'table';
 
-    // --- 3. LIVE DATABASE SYNC ---
+    // --- 3. LIVE FIRESTORE LISTENERS ---
     db.collection("inventory").onSnapshot(snapshot => {
       if (snapshot.empty) {
         const batch = db.batch();
@@ -393,30 +514,98 @@
         snapshot.forEach(doc => inventory.push({ id: doc.id, ...doc.data() }));
         applyFilters();
       }
+    });
 
+    db.collection("transactions").orderBy("timestamp", "desc").onSnapshot(snapshot => {
+      transactions = [];
+      snapshot.forEach(doc => transactions.push({ id: doc.id, ...doc.data() }));
+      applyLedgerFilters();
+    });
+
+    // Check Cloud Status
+    setInterval(() => {
       const isOnline = navigator.onLine;
       const status = document.getElementById("sync-status");
       status.innerText = isOnline ? "Live Synced" : "Offline Cached";
       status.style.background = isOnline ? "#22c55e" : "#f59e0b";
-    });
+    }, 2000);
 
-    // --- AUTOMATIC PRICE CALCULATION ENGINES ---
+    // Render Pills on Boot
+    function renderFilterPills() {
+      const catContainer = document.getElementById("category-pills");
+      catContainer.innerHTML = "";
+      categoriesList.forEach(c => {
+        const pill = document.createElement("div");
+        pill.className = `pill ${activeCategory === c ? 'active' : ''}`;
+        pill.innerText = c === 'ALL' ? 'All Categories' : c;
+        pill.onclick = () => { activeCategory = c; renderFilterPills(); applyFilters(); };
+        catContainer.appendChild(pill);
+      });
+
+      const sizeContainer = document.getElementById("size-pills");
+      sizeContainer.innerHTML = "";
+      sizesList.forEach(s => {
+        const pill = document.createElement("div");
+        pill.className = `pill ${activeSize === s ? 'active' : ''}`;
+        pill.innerText = s === 'ALL' ? 'All Sizes' : `${s} ft`;
+        pill.onclick = () => { activeSize = s; renderFilterPills(); applyFilters(); };
+        sizeContainer.appendChild(pill);
+      });
+    }
+    renderFilterPills();
+
+    function addCustomFilter(type) {
+      const val = prompt(`Enter new ${type === 'category' ? 'Category / Grade Name' : 'Size (e.g. 7x2.5)'}:`);
+      if (val) {
+        if (type === 'category' && !categoriesList.includes(val)) categoriesList.push(val);
+        if (type === 'size' && !sizesList.includes(val)) sizesList.push(val);
+        renderFilterPills();
+      }
+    }
+
+    // --- NAVIGATION ---
+    function switchNav(tab) {
+      document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+      document.getElementById('tab-pos').classList.toggle('hidden', tab !== 'pos');
+      document.getElementById('tab-ledger').classList.toggle('hidden', tab !== 'ledger');
+      document.getElementById('tab-add').classList.toggle('hidden', tab !== 'add');
+      document.getElementById('cart-drawer').classList.toggle('hidden', tab !== 'pos');
+      event.target.classList.add('active');
+
+      if (tab === 'pos') applyFilters();
+      if (tab === 'ledger') applyLedgerFilters();
+    }
+
+    function setViewMode(mode) {
+      currentView = mode;
+      document.getElementById("btn-view-table").classList.toggle("active", mode === 'table');
+      document.getElementById("btn-view-grid").classList.toggle("active", mode === 'grid');
+      document.getElementById("wrapper-table-view").classList.toggle("hidden", mode !== 'table');
+      document.getElementById("wrapper-grid-view").classList.toggle("hidden", mode !== 'grid');
+      applyFilters();
+    }
+
+    // --- FORM PRICE CALCULATORS ---
+    function toggleFormMode() {
+      const type = document.getElementById("add-type").value;
+      document.getElementById("form-ply-box").classList.toggle("hidden", type !== "plywood");
+      document.getElementById("form-door-box").classList.toggle("hidden", type !== "door");
+      document.getElementById("form-hard-box").classList.toggle("hidden", type !== "hardware");
+      document.getElementById("add-price").value = "";
+    }
+
     function calcAddPrice() {
       const l = parseFloat(document.getElementById("add-ply-l").value) || 0;
       const w = parseFloat(document.getElementById("add-ply-w").value) || 0;
       const r = parseFloat(document.getElementById("add-ply-rate").value) || 0;
-      if (l && w && r) {
-        document.getElementById("add-price").value = Math.round(l * w * r);
-      }
+      if (l && w && r) document.getElementById("add-price").value = Math.round(l * w * r);
     }
 
     function calcDoorAddPrice() {
       const w = parseFloat(document.getElementById("add-door-w").value) || 0;
       const h = parseFloat(document.getElementById("add-door-h").value) || 0;
       const r = parseFloat(document.getElementById("add-door-rate").value) || 0;
-      if (w && h && r) {
-        document.getElementById("add-price").value = Math.round(((w * h) / 144) * r);
-      }
+      if (w && h && r) document.getElementById("add-price").value = Math.round(((w * h) / 144) * r);
     }
 
     function calcHardPrice() {
@@ -439,39 +628,6 @@
       }
     }
 
-    function setViewMode(mode) {
-      currentView = mode;
-      document.getElementById("btn-view-table").classList.toggle("active", mode === 'table');
-      document.getElementById("btn-view-grid").classList.toggle("active", mode === 'grid');
-      document.getElementById("wrapper-table-view").classList.toggle("hidden", mode !== 'table');
-      document.getElementById("wrapper-grid-view").classList.toggle("hidden", mode !== 'grid');
-      applyFilters();
-    }
-
-    function switchNav(tab) {
-      document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
-      if (tab === 'pos') {
-        document.getElementById('tab-pos').classList.remove('hidden');
-        document.getElementById('tab-add').classList.add('hidden');
-        document.getElementById('cart-drawer').classList.remove('hidden');
-        event.target.classList.add('active');
-        applyFilters();
-      } else {
-        document.getElementById('tab-pos').classList.add('hidden');
-        document.getElementById('tab-add').classList.remove('hidden');
-        document.getElementById('cart-drawer').classList.add('hidden');
-        event.target.classList.add('active');
-      }
-    }
-
-    function toggleFormMode() {
-      const type = document.getElementById("add-type").value;
-      document.getElementById("form-ply-box").classList.toggle("hidden", type !== "plywood");
-      document.getElementById("form-door-box").classList.toggle("hidden", type !== "door");
-      document.getElementById("form-hard-box").classList.toggle("hidden", type !== "hardware");
-      document.getElementById("add-price").value = "";
-    }
-
     function saveItem() {
       const name = document.getElementById("add-name").value;
       const type = document.getElementById("add-type").value;
@@ -480,12 +636,11 @@
       const stock = parseInt(document.getElementById("add-stock").value);
 
       if (!name || isNaN(price) || isNaN(stock)) {
-        alert("Please enter dimensions/rates to calculate price and stock.");
+        alert("Please enter details to auto-calculate price and stock.");
         return;
       }
 
       let l = 0, w = 0, dimension = "-", area = "-", rateStr = "-", rateVal = 0, purchaseRate = 0;
-
       if (type === "plywood") {
         l = parseFloat(document.getElementById("add-ply-l").value);
         w = parseFloat(document.getElementById("add-ply-w").value);
@@ -514,7 +669,7 @@
       db.collection("inventory").add({
         name, type, grade, l, w, dimension, area, purchaseRate, rateVal, rateStr, price, stock
       }).then(() => {
-        alert("Item added to inventory!");
+        alert("Item added successfully!");
         document.getElementById("add-name").value = "";
         document.getElementById("add-price").value = "";
         document.getElementById("add-stock").value = "";
@@ -522,7 +677,59 @@
       });
     }
 
-    // --- EDIT MODAL ---
+    // --- RESTOCK QUICK MODAL ---
+    function openRestockModal(id) {
+      const item = inventory.find(i => i.id === id);
+      if (!item) return;
+      document.getElementById("restock-id").value = item.id;
+      document.getElementById("restock-item-name").innerText = `${item.name} (${item.dimension || ''} ${item.grade || ''}) | Current Stock: ${item.stock}`;
+      document.getElementById("restock-qty").value = "";
+      document.getElementById("restock-cost").value = item.purchaseRate || "";
+      document.getElementById("restock-supplier").value = "";
+      document.getElementById("restock-modal").classList.remove("hidden");
+    }
+
+    function closeRestockModal() {
+      document.getElementById("restock-modal").classList.add("hidden");
+    }
+
+    function submitRestock() {
+      const id = document.getElementById("restock-id").value;
+      const qty = parseInt(document.getElementById("restock-qty").value);
+      const cost = parseFloat(document.getElementById("restock-cost").value) || 0;
+      const supplier = document.getElementById("restock-supplier").value || "General Inward";
+
+      if (isNaN(qty) || qty <= 0) {
+        alert("Enter a valid stock quantity");
+        return;
+      }
+
+      const item = inventory.find(i => i.id === id);
+      const totalAmount = cost * qty;
+
+      const batch = db.batch();
+      const itemRef = db.collection("inventory").doc(id);
+      batch.update(itemRef, { stock: firebase.firestore.FieldValue.increment(qty) });
+
+      // Log Purchase Transaction
+      const txRef = db.collection("transactions").doc();
+      batch.set(txRef, {
+        type: "PURCHASE",
+        party: supplier,
+        itemsSummary: `${item.name} (${item.dimension || ''})`,
+        qty: qty,
+        rate: cost,
+        totalAmount: totalAmount,
+        timestamp: new Date().toISOString()
+      });
+
+      batch.commit().then(() => {
+        closeRestockModal();
+        alert(`Successfully added ${qty} units to stock!`);
+      });
+    }
+
+    // --- EDIT & DELETE ---
     function openEditModal(id) {
       const item = inventory.find(i => i.id === id);
       if (!item) return;
@@ -577,25 +784,10 @@
     }
 
     function deleteItem(id, name) {
-      if (confirm(`Delete "${name}" from stock?`)) {
-        db.collection("inventory").doc(id).delete();
-      }
+      if (confirm(`Delete "${name}" from stock?`)) db.collection("inventory").doc(id).delete();
     }
 
-    function setCategoryFilter(cat, elem) {
-      elem.parentNode.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
-      elem.classList.add("active");
-      activeCategory = cat;
-      applyFilters();
-    }
-
-    function setSizeFilter(sz, elem) {
-      elem.parentNode.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
-      elem.classList.add("active");
-      activeSize = sz;
-      applyFilters();
-    }
-
+    // --- POS FILTERING ---
     function applyFilters() {
       const query = document.getElementById("search-box").value.toLowerCase();
       const tbody = document.getElementById("inventory-table-body");
@@ -609,10 +801,10 @@
                             (item.dimension && item.dimension.toLowerCase().includes(query));
 
         let matchCat = true;
-        if (activeCategory === 'Marine / BWP') matchCat = item.grade && (item.grade.toLowerCase().includes('marine') || item.grade.toLowerCase().includes('bwp'));
-        else if (activeCategory === 'MR Grade') matchCat = item.grade && item.grade.toLowerCase().includes('mr');
-        else if (activeCategory === 'Door') matchCat = item.type === 'door';
-        else if (activeCategory === 'Hardware') matchCat = item.type === 'hardware';
+        if (activeCategory !== 'ALL') {
+          matchCat = (item.grade && item.grade.toLowerCase().includes(activeCategory.toLowerCase())) ||
+                     (item.type && item.type.toLowerCase().includes(activeCategory.toLowerCase()));
+        }
 
         let matchSize = true;
         if (activeSize !== 'ALL') matchSize = item.dimension && item.dimension.includes(activeSize);
@@ -629,7 +821,7 @@
       filtered.forEach(item => {
         let badgeClass = item.type === 'plywood' ? 'badge-ply' : item.type === 'door' ? 'badge-door' : 'badge-hard';
 
-        // Table Rows
+        // Table
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><strong>${item.name}</strong></td>
@@ -642,6 +834,7 @@
           <td>
             <div class="action-group">
               <button class="btn-add" onclick="changeCartQty('${item.id}', 1)">+ Add</button>
+              <button class="btn-restock" onclick="openRestockModal('${item.id}')">➕ Stock</button>
               <button class="btn-edit" onclick="openEditModal('${item.id}')">✏️</button>
               <button class="btn-del" onclick="deleteItem('${item.id}', '${item.name}')">🗑️</button>
             </div>
@@ -649,7 +842,7 @@
         `;
         tbody.appendChild(tr);
 
-        // Grid Button Tiles
+        // Buttons
         const card = document.createElement("div");
         card.className = "item-card-btn";
         card.innerHTML = `
@@ -661,35 +854,38 @@
             <div class="card-price">₹${item.price}</div>
             <div class="stock-tag ${item.stock <= 5 ? 'low' : ''}" style="font-size:0.75rem;">Stock: ${item.stock}</div>
           </div>
-          <div style="display:flex; justify-content:space-between; margin-top: 10px; border-top: 1px solid #f1f5f9; padding-top: 6px;">
-            <button class="btn-add" style="flex:1; margin-right:4px;" onclick="changeCartQty('${item.id}', 1)">+ Add</button>
-            <button class="btn-edit" onclick="openEditModal('${item.id}')">✏️</button>
-            <button class="btn-del" style="margin-left:4px;" onclick="deleteItem('${item.id}', '${item.name}')">🗑️</button>
+          <div style="display:flex; flex-direction:column; gap:6px; margin-top: 10px; border-top: 1px solid #f1f5f9; padding-top: 6px;">
+            <div style="display:flex; gap:4px;">
+              <button class="btn-add" style="flex:1;" onclick="changeCartQty('${item.id}', 1)">+ Bill</button>
+              <button class="btn-restock" style="flex:1;" onclick="openRestockModal('${item.id}')">➕ Stock</button>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:4px;">
+              <button class="btn-edit" onclick="openEditModal('${item.id}')">✏️</button>
+              <button class="btn-del" onclick="deleteItem('${item.id}', '${item.name}')">🗑️</button>
+            </div>
           </div>
         `;
         grid.appendChild(card);
       });
     }
 
-    // --- CART STEPPER (+ / - / CLEAR) ---
+    // --- CART CONTROLLER ---
     function changeCartQty(id, delta) {
       const item = inventory.find(i => i.id === id);
       if (!item) return;
 
       if (!cart[id]) {
         if (delta > 0) {
-          if (item.stock < 1) { alert("Item is out of stock!"); return; }
+          if (item.stock < 1) { alert("Out of stock!"); return; }
           cart[id] = { ...item, qty: 1 };
         }
       } else {
         cart[id].qty += delta;
         if (cart[id].qty > item.stock) {
           cart[id].qty = item.stock;
-          alert("Cannot exceed available store stock!");
+          alert("Exceeds current shop stock!");
         }
-        if (cart[id].qty <= 0) {
-          delete cart[id];
-        }
+        if (cart[id].qty <= 0) delete cart[id];
       }
       updateCartDisplay();
     }
@@ -735,21 +931,31 @@
       document.getElementById("cart-item-count").innerText = `${count} items in bill`;
     }
 
-    function generateInvoicePDF() {
+    function openCheckoutModal() {
+      if (Object.keys(cart).length === 0) { alert("Add items to bill first!"); return; }
+      document.getElementById("checkout-modal").classList.remove("hidden");
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById("checkout-modal").classList.add("hidden");
+    }
+
+    // --- CHECKOUT & TRANSACTION RECORDING ---
+    function confirmAndPrintBill() {
+      const customer = document.getElementById("customer-name").value || "Cash Customer";
+      const phone = document.getElementById("customer-phone").value || "-";
       const keys = Object.keys(cart);
-      if (keys.length === 0) {
-        alert("Please add items to the bill first.");
-        return;
-      }
 
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
       let y = 18;
 
-      doc.setFontSize(15);
-      doc.text("TIMBER & HARDWARE STORE INVOICE", 14, y);
-      y += 8;
+      doc.setFontSize(16);
+      doc.text("TIMBER & HARDWARE INVOICE", 14, y);
+      y += 7;
       doc.setFontSize(9);
+      doc.text(`Customer: ${customer} | Ph: ${phone}`, 14, y);
+      y += 5;
       doc.text(`Date: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 14, y);
       y += 6;
       doc.line(14, y, 196, y);
@@ -766,12 +972,16 @@
       y += 6;
 
       let grandTotal = 0;
+      let totalQty = 0;
+      let itemsSummaryList = [];
       const batch = db.batch();
 
       keys.forEach((id) => {
         const item = cart[id];
         const lineTotal = item.price * item.qty;
         grandTotal += lineTotal;
+        totalQty += item.qty;
+        itemsSummaryList.push(`${item.name} (${item.qty})`);
 
         doc.text(`${item.name} (${item.grade})`.substring(0, 30), 14, y);
         doc.text(item.dimension || "-", 80, y);
@@ -780,6 +990,7 @@
         doc.text(`Rs. ${lineTotal}`, 175, y);
         y += 7;
 
+        // Deduct inventory
         const docRef = db.collection("inventory").doc(item.id);
         batch.update(docRef, { stock: firebase.firestore.FieldValue.increment(-item.qty) });
       });
@@ -790,16 +1001,103 @@
       doc.setFontSize(11);
       doc.text(`Grand Total: Rs. ${grandTotal}`, 135, y);
 
-      doc.save(`Invoice_${Date.now()}.pdf`);
+      // Save Sale Transaction in Firestore
+      const txRef = db.collection("transactions").doc();
+      batch.set(txRef, {
+        type: "SALE",
+        party: customer,
+        phone: phone,
+        itemsSummary: itemsSummaryList.join(", "),
+        qty: totalQty,
+        totalAmount: grandTotal,
+        timestamp: new Date().toISOString()
+      });
+
+      doc.save(`Invoice_${customer.replace(/\s+/g, '_')}_${Date.now()}.pdf`);
 
       batch.commit().then(() => {
+        closeCheckoutModal();
         cart = {};
         updateCartDisplay();
-        alert("Invoice created and stock synced across all devices!");
+        alert("Invoice generated and sale recorded into Ledger!");
+      });
+    }
+
+    // --- LEDGER / HISTORY FILTER & SORT ---
+    function applyLedgerFilters() {
+      const query = (document.getElementById("ledger-search") ? document.getElementById("ledger-search").value : "").toLowerCase();
+      const typeFilter = document.getElementById("ledger-type-filter") ? document.getElementById("ledger-type-filter").value : "ALL";
+      const fromDate = document.getElementById("ledger-date-from") ? document.getElementById("ledger-date-from").value : "";
+      const toDate = document.getElementById("ledger-date-to") ? document.getElementById("ledger-date-to").value : "";
+      const sortBy = document.getElementById("ledger-sort") ? document.getElementById("ledger-sort").value : "date-desc";
+
+      let filtered = transactions.filter(t => {
+        const matchSearch = (t.party && t.party.toLowerCase().includes(query)) ||
+                            (t.itemsSummary && t.itemsSummary.toLowerCase().includes(query));
+
+        let matchType = true;
+        if (typeFilter !== 'ALL') matchType = t.type === typeFilter;
+
+        let matchDate = true;
+        if (fromDate) matchDate = matchDate && t.timestamp >= fromDate;
+        if (toDate) matchDate = matchDate && t.timestamp <= `${toDate}T23:59:59`;
+
+        return matchSearch && matchType && matchDate;
+      });
+
+      // Sorting
+      filtered.sort((a, b) => {
+        if (sortBy === 'date-desc') return new Date(b.timestamp) - new Date(a.timestamp);
+        if (sortBy === 'date-asc') return new Date(a.timestamp) - new Date(b.timestamp);
+        if (sortBy === 'amount-desc') return b.totalAmount - a.totalAmount;
+        if (sortBy === 'amount-asc') return a.totalAmount - b.totalAmount;
+        if (sortBy === 'party-asc') return (a.party || "").localeCompare(b.party || "");
+        return 0;
+      });
+
+      // Calculate KPIs
+      let totalSales = 0, totalPurchases = 0;
+      transactions.forEach(t => {
+        if (t.type === 'SALE') totalSales += t.totalAmount || 0;
+        if (t.type === 'PURCHASE') totalPurchases += t.totalAmount || 0;
+      });
+
+      if (document.getElementById("kpi-total-sales")) {
+        document.getElementById("kpi-total-sales").innerText = `₹${totalSales.toLocaleString('en-IN')}`;
+        document.getElementById("kpi-total-purchases").innerText = `₹${totalPurchases.toLocaleString('en-IN')}`;
+        document.getElementById("kpi-gross-profit").innerText = `₹${(totalSales - totalPurchases).toLocaleString('en-IN')}`;
+      }
+
+      // Render Ledger Table
+      const tbody = document.getElementById("ledger-table-body");
+      if (!tbody) return;
+      tbody.innerHTML = "";
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 24px; color: #888;">No transactions found.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(t => {
+        const isSale = t.type === 'SALE';
+        const dateObj = new Date(t.timestamp);
+        const dateFormatted = `${dateObj.toLocaleDateString()} ${dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${dateFormatted}</td>
+          <td><span class="badge" style="background:${isSale ? '#dcfce7' : '#fef3c7'}; color:${isSale ? '#15803d' : '#92400e'};">${t.type}</span></td>
+          <td><strong>${t.party || '-'}</strong></td>
+          <td style="max-width:240px; font-size:0.82rem;">${t.itemsSummary || '-'}</td>
+          <td>${t.qty || 0}</td>
+          <td><strong style="color:${isSale ? 'var(--success)' : 'var(--accent)'};">₹${(t.totalAmount || 0).toLocaleString('en-IN')}</strong></td>
+        `;
+        tbody.appendChild(tr);
       });
     }
   </script>
 </body>
 </html>
+
 
 
