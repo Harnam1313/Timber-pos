@@ -27,7 +27,7 @@
       --text-muted: #64748b;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 110px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 140px; }
 
     header { background: var(--primary); color: white; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 30; }
     header h1 { font-size: 1.15rem; font-weight: 700; }
@@ -40,7 +40,7 @@
     .container { padding: 14px; max-width: 1200px; margin: 0 auto; }
     .hidden { display: none !important; }
 
-    /* Filter & View Switcher Bar */
+    /* Filter & Controls */
     .filter-section { background: white; padding: 12px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 12px; }
     .top-controls { display: flex; gap: 8px; margin-bottom: 10px; }
     .search-input { flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; }
@@ -54,20 +54,19 @@
     .pill { padding: 6px 14px; background: #f1f5f9; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: #334155; white-space: nowrap; border: 1px solid #cbd5e1; cursor: pointer; }
     .pill.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-    /* 1. TABLE VIEW */
+    /* Table View */
     .table-card { background: white; border-radius: 10px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
     .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; min-width: 800px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; min-width: 820px; }
     th { background: #f8fafc; color: var(--text-muted); padding: 10px 12px; font-weight: 600; border-bottom: 1px solid var(--border); }
     td { padding: 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
     tr:hover { background: #f8fafc; }
 
-    /* 2. BUTTON / CARD GRID VIEW */
-    .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
-    .item-card-btn { background: white; border: 1.5px solid var(--border); border-radius: 12px; padding: 12px; text-align: left; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
-    .item-card-btn:active { transform: scale(0.97); border-color: var(--primary); }
+    /* Button Grid View */
+    .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 12px; }
+    .item-card-btn { background: white; border: 1.5px solid var(--border); border-radius: 12px; padding: 12px; text-align: left; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
     .card-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; line-height: 1.2; }
-    .card-meta { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px; }
+    .card-meta { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px; }
     .card-price { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 6px; }
 
     /* Action Buttons */
@@ -83,9 +82,16 @@
     .stock-tag { font-weight: 700; color: #15803d; }
     .stock-tag.low { color: #b91c1c; }
 
-    /* Cart Floating Dock */
-    .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 12px 18px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -4px 14px rgba(0,0,0,0.08); z-index: 40; }
-    .btn { background: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer; }
+    /* Floating Cart Dock & Quantity Adjustment Bar */
+    .cart-drawer { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 2px solid var(--primary); box-shadow: 0 -4px 16px rgba(0,0,0,0.12); z-index: 40; max-height: 45vh; display: flex; flex-direction: column; }
+    .cart-header { padding: 10px 16px; background: #f8fafc; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); font-size: 0.88rem; font-weight: 700; }
+    .cart-items-scroll { overflow-y: auto; padding: 8px 16px; flex: 1; }
+    .cart-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
+    .qty-controls { display: flex; align-items: center; gap: 8px; }
+    .qty-btn { width: 26px; height: 26px; border: 1px solid #cbd5e1; background: #f1f5f9; border-radius: 4px; font-weight: bold; font-size: 1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    
+    .cart-footer { padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; background: white; }
+    .btn { background: var(--primary); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer; }
     .btn-danger { background: #ef4444; }
 
     /* Forms & Modal */
@@ -95,7 +101,7 @@
     input, select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; }
     .dim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
-    /* Edit Modal Backdrop */
+    /* Edit Modal */
     .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
     .modal-card { background: white; width: 100%; max-width: 480px; border-radius: 12px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
   </style>
@@ -117,8 +123,6 @@
     <div class="filter-section">
       <div class="top-controls">
         <input type="text" id="search-box" class="search-input" placeholder="Search item, grade, brand, size..." oninput="applyFilters()" />
-        
-        <!-- Toggle Between Table and Button Grid -->
         <div class="view-toggle">
           <button class="view-btn active" id="btn-view-table" onclick="setViewMode('table')">Table</button>
           <button class="view-btn" id="btn-view-grid" onclick="setViewMode('grid')">Buttons</button>
@@ -147,7 +151,7 @@
       </div>
     </div>
 
-    <!-- VIEW 1: Structured Table Mode -->
+    <!-- VIEW 1: Table -->
     <div id="wrapper-table-view" class="table-card">
       <div class="table-wrap">
         <table>
@@ -157,8 +161,8 @@
               <th>Grade / Brand</th>
               <th>Dimensions</th>
               <th>Area / Unit</th>
-              <th>Rate</th>
-              <th>Calculated Price</th>
+              <th>Selling Rate</th>
+              <th>Selling Price</th>
               <th>Stock</th>
               <th>Actions</th>
             </tr>
@@ -168,7 +172,7 @@
       </div>
     </div>
 
-    <!-- VIEW 2: Touch Button / Tile Grid Mode -->
+    <!-- VIEW 2: Button Grid -->
     <div id="wrapper-grid-view" class="grid-view hidden"></div>
   </div>
 
@@ -196,6 +200,7 @@
         <input type="text" id="add-grade" placeholder="e.g. Marine / BWP, MR Grade, Godrej, Brass Antique" />
       </div>
 
+      <!-- Plywood Dimensions & Separate Rates -->
       <div id="form-ply-box">
         <div class="form-group">
           <label>Plywood Dimensions (Feet)</label>
@@ -204,12 +209,19 @@
             <input type="number" step="0.1" id="add-ply-w" placeholder="Width (e.g. 4)" oninput="calcAddPrice()" />
           </div>
         </div>
-        <div class="form-group">
-          <label>Rate per Sq. Ft. (₹)</label>
-          <input type="number" id="add-ply-rate" placeholder="e.g. 75" oninput="calcAddPrice()" />
+        <div class="dim-grid">
+          <div class="form-group">
+            <label>Purchase Cost / Sq.Ft (₹)</label>
+            <input type="number" id="add-ply-pur-rate" placeholder="e.g. 48" />
+          </div>
+          <div class="form-group">
+            <label>Selling Rate / Sq.Ft (₹)</label>
+            <input type="number" id="add-ply-rate" placeholder="e.g. 60" oninput="calcAddPrice()" />
+          </div>
         </div>
       </div>
 
+      <!-- Flush Door Dimensions & Separate Rates -->
       <div id="form-door-box" class="hidden">
         <div class="form-group">
           <label>Door Dimensions (Inches)</label>
@@ -218,12 +230,19 @@
             <input type="number" step="0.5" id="add-door-h" placeholder="Height (e.g. 82)" oninput="calcDoorAddPrice()" />
           </div>
         </div>
-        <div class="form-group">
-          <label>Rate per Sq. Ft. (₹)</label>
-          <input type="number" id="add-door-rate" placeholder="e.g. 110" oninput="calcDoorAddPrice()" />
+        <div class="dim-grid">
+          <div class="form-group">
+            <label>Purchase Cost / Sq.Ft (₹)</label>
+            <input type="number" id="add-door-pur-rate" placeholder="e.g. 80" />
+          </div>
+          <div class="form-group">
+            <label>Selling Rate / Sq.Ft (₹)</label>
+            <input type="number" id="add-door-rate" placeholder="e.g. 105" oninput="calcDoorAddPrice()" />
+          </div>
         </div>
       </div>
 
+      <!-- Hardware Units & Separate Rates -->
       <div id="form-hard-box" class="hidden">
         <div class="form-group">
           <label>Unit of Measure</label>
@@ -234,19 +253,25 @@
             <option value="Box">Per Box</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Rate per Unit (₹)</label>
-          <input type="number" id="add-hard-rate" placeholder="e.g. 320" oninput="calcHardPrice()" />
+        <div class="dim-grid">
+          <div class="form-group">
+            <label>Purchase Cost / Unit (₹)</label>
+            <input type="number" id="add-hard-pur-rate" placeholder="e.g. 150" />
+          </div>
+          <div class="form-group">
+            <label>Selling Rate / Unit (₹)</label>
+            <input type="number" id="add-hard-rate" placeholder="e.g. 220" oninput="calcHardPrice()" />
+          </div>
         </div>
       </div>
 
       <div class="form-group">
-        <label>Final Selling Price per Piece/Sheet (₹)</label>
-        <input type="number" id="add-price" placeholder="Calculated Auto Price" />
+        <label>Calculated Selling Price (₹ Auto-Filled)</label>
+        <input type="number" id="add-price" placeholder="Auto calculates upon entering dimensions & rate" style="background:#f1f5f9; font-weight:bold; color:var(--primary);" />
       </div>
 
       <div class="form-group">
-        <label>Stock Quantity</label>
+        <label>Opening Stock Quantity</label>
         <input type="number" id="add-stock" placeholder="e.g. 50" />
       </div>
 
@@ -254,11 +279,13 @@
     </div>
   </div>
 
-  <!-- EDIT ITEM MODAL DIALOG -->
+  <!-- EDIT MODAL WITH LIVE RE-CALCULATOR -->
   <div id="edit-modal" class="modal-overlay hidden">
     <div class="modal-card">
-      <h3 style="margin-bottom: 12px; font-size: 1.1rem;">Edit Inventory Item</h3>
+      <h3 style="margin-bottom: 12px; font-size: 1.1rem;">Edit Product & Rates</h3>
       <input type="hidden" id="edit-id" />
+      <input type="hidden" id="edit-type" />
+      
       <div class="form-group">
         <label>Item Name</label>
         <input type="text" id="edit-name" />
@@ -267,20 +294,33 @@
         <label>Grade / Brand</label>
         <input type="text" id="edit-grade" />
       </div>
+      
+      <!-- Plywood/Door Dynamic Dimensions in Edit -->
+      <div id="edit-dim-box" class="form-group">
+        <label>Dimensions</label>
+        <div class="dim-grid">
+          <input type="number" step="0.1" id="edit-dim-1" placeholder="Length / Width" oninput="recalcEditPrice()" />
+          <input type="number" step="0.1" id="edit-dim-2" placeholder="Width / Height" oninput="recalcEditPrice()" />
+        </div>
+      </div>
+
+      <div class="dim-grid">
+        <div class="form-group">
+          <label>Purchase Cost (₹)</label>
+          <input type="number" id="edit-pur-price" placeholder="Cost" />
+        </div>
+        <div class="form-group">
+          <label>Selling Rate (₹/unit or sqft)</label>
+          <input type="number" id="edit-rate-val" placeholder="Rate" oninput="recalcEditPrice()" />
+        </div>
+      </div>
+
       <div class="form-group">
-        <label>Dimensions / Specs</label>
-        <input type="text" id="edit-dim" />
+        <label>Calculated Selling Price (₹)</label>
+        <input type="number" id="edit-price" style="background:#f1f5f9; font-weight:bold; color:var(--primary);" />
       </div>
       <div class="form-group">
-        <label>Rate Text (e.g. ₹85/sqft or ₹220/Pair)</label>
-        <input type="text" id="edit-rate" />
-      </div>
-      <div class="form-group">
-        <label>Price per Unit (₹)</label>
-        <input type="number" id="edit-price" />
-      </div>
-      <div class="form-group">
-        <label>Current Stock Quantity</label>
+        <label>Stock Quantity</label>
         <input type="number" id="edit-stock" />
       </div>
       <div style="display: flex; gap: 8px; margin-top: 14px;">
@@ -290,14 +330,17 @@
     </div>
   </div>
 
-  <!-- Cart / Checkout Dock -->
-  <div class="cart-bar" id="cart-bar">
-    <div>
-      <div style="font-size: 0.8rem; color: var(--text-muted);" id="cart-item-count">0 items selected</div>
-      <div style="font-size: 1.15rem; font-weight: 800; color: var(--primary);" id="cart-total-amount">₹0</div>
+  <!-- FLOATING CART DOCK WITH +/- STEPPERS -->
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-header">
+      <span id="cart-item-count">0 items in bill</span>
+      <span id="cart-total-amount" style="font-size:1.1rem; color:var(--primary);">₹0</span>
     </div>
-    <div style="display: flex; gap: 8px;">
-      <button class="btn btn-danger" onclick="clearCart()">Clear</button>
+    <div class="cart-items-scroll" id="cart-items-list">
+      <div style="text-align:center; color:#94a3b8; padding:6px; font-size:0.8rem;">Tap '+ Add' on items to start billing</div>
+    </div>
+    <div class="cart-footer">
+      <button class="btn btn-danger" style="padding:8px 14px; font-size:0.85rem;" onclick="clearCart()">Clear</button>
       <button class="btn" onclick="generateInvoicePDF()">Print / PDF Bill</button>
     </div>
   </div>
@@ -318,35 +361,25 @@
 
     db.enablePersistence({ synchronizeTabs: true }).catch(err => console.warn(err));
 
-    // --- 2. PRELOAD CATALOG ---
+    // --- 2. PRELOAD CATALOG WITH PURCHASE AND SELLING RATES ---
     const defaultCatalog = [
-      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", dimension: "8x4", area: "32 sq.ft", rateStr: "₹85/sqft", price: 2720, stock: 35 },
-      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", dimension: "7x4", area: "28 sq.ft", rateStr: "₹85/sqft", price: 2380, stock: 25 },
-      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", dimension: "6x4", area: "24 sq.ft", rateStr: "₹85/sqft", price: 2040, stock: 20 },
-      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", dimension: "8x3", area: "24 sq.ft", rateStr: "₹85/sqft", price: 2040, stock: 15 },
-      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", dimension: "7x3", area: "21 sq.ft", rateStr: "₹85/sqft", price: 1785, stock: 20 },
-      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", dimension: "6x3", area: "18 sq.ft", rateStr: "₹85/sqft", price: 1530, stock: 30 },
-      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", dimension: "6x2.5", area: "15 sq.ft", rateStr: "₹85/sqft", price: 1275, stock: 20 },
-      { name: "Commercial Ply 18mm", type: "plywood", grade: "MR Grade", dimension: "8x4", area: "32 sq.ft", rateStr: "₹55/sqft", price: 1760, stock: 45 },
-      { name: "Commercial Ply 18mm", type: "plywood", grade: "MR Grade", dimension: "7x4", area: "28 sq.ft", rateStr: "₹55/sqft", price: 1540, stock: 30 },
-      { name: "Commercial Ply 18mm", type: "plywood", grade: "MR Grade", dimension: "6x4", area: "24 sq.ft", rateStr: "₹55/sqft", price: 1320, stock: 25 },
-      { name: "Commercial Ply 18mm", type: "plywood", grade: "MR Grade", dimension: "7x3", area: "21 sq.ft", rateStr: "₹55/sqft", price: 1155, stock: 20 },
-      { name: "Commercial Ply 18mm", type: "plywood", grade: "MR Grade", dimension: "6x3", area: "18 sq.ft", rateStr: "₹55/sqft", price: 990, stock: 40 },
-      { name: "Commercial Ply 18mm", type: "plywood", grade: "MR Grade", dimension: "6x2.5", area: "15 sq.ft", rateStr: "₹55/sqft", price: 825, stock: 25 },
-      { name: "Flush Door Solid Pine", type: "door", grade: "Pine Core", dimension: '32"x82"', area: "18.22 sq.ft", rateStr: "₹105/sqft", price: 1913, stock: 12 },
-      { name: "Flush Door Solid Pine", type: "door", grade: "Pine Core", dimension: '36"x84"', area: "21.00 sq.ft", rateStr: "₹105/sqft", price: 2205, stock: 10 },
-      { name: "Hydraulic Auto Hinges", type: "hardware", grade: "Hettich Type", dimension: "-", area: "1 Pair", rateStr: "₹220/Pair", price: 220, stock: 150 },
-      { name: "Telescopic Channel 18 inch", type: "hardware", grade: "Heavy Duty", dimension: "18 inch", area: "1 Set", rateStr: "₹380/Set", price: 380, stock: 60 },
-      { name: "Tower Bolt Brass Antique", type: "hardware", grade: "Brass Premium", dimension: "8 inch", area: "1 Pc", rateStr: "₹260/Piece", price: 260, stock: 45 }
+      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", l: 8, w: 4, dimension: "8x4", area: "32 sq.ft", purchaseRate: 70, rateVal: 85, rateStr: "₹85/sqft", price: 2720, stock: 35 },
+      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", l: 7, w: 4, dimension: "7x4", area: "28 sq.ft", purchaseRate: 70, rateVal: 85, rateStr: "₹85/sqft", price: 2380, stock: 25 },
+      { name: "Marine Plywood 18mm", type: "plywood", grade: "Marine / BWP", l: 6, w: 4, dimension: "6x4", area: "24 sq.ft", purchaseRate: 70, rateVal: 85, rateStr: "₹85/sqft", price: 2040, stock: 20 },
+      { name: "Commercial Ply 18mm", type: "plywood", grade: "MR Grade", l: 8, w: 4, dimension: "8x4", area: "32 sq.ft", purchaseRate: 44, rateVal: 55, rateStr: "₹55/sqft", price: 1760, stock: 45 },
+      { name: "Commercial Ply 18mm", type: "plywood", grade: "MR Grade", l: 7, w: 4, dimension: "7x4", area: "28 sq.ft", purchaseRate: 44, rateVal: 55, rateStr: "₹55/sqft", price: 1540, stock: 30 },
+      { name: "Flush Door Solid Pine", type: "door", grade: "Pine Core", l: 32, w: 82, dimension: '32"x82"', area: "18.22 sq.ft", purchaseRate: 85, rateVal: 105, rateStr: "₹105/sqft", price: 1913, stock: 12 },
+      { name: "Hydraulic Auto Hinges", type: "hardware", grade: "Hettich Type", l: 0, w: 0, dimension: "-", area: "1 Pair", purchaseRate: 160, rateVal: 220, rateStr: "₹220/Pair", price: 220, stock: 150 },
+      { name: "Telescopic Channel 18 inch", type: "hardware", grade: "Heavy Duty", l: 18, w: 0, dimension: "18 inch", area: "1 Set", purchaseRate: 290, rateVal: 380, rateStr: "₹380/Set", price: 380, stock: 60 }
     ];
 
     let inventory = [];
     let cart = {};
     let activeCategory = 'ALL';
     let activeSize = 'ALL';
-    let currentView = 'table'; // 'table' or 'grid'
+    let currentView = 'table';
 
-    // --- 3. LIVE CLOUD SYNC ---
+    // --- 3. LIVE DATABASE SYNC ---
     db.collection("inventory").onSnapshot(snapshot => {
       if (snapshot.empty) {
         const batch = db.batch();
@@ -367,6 +400,45 @@
       status.style.background = isOnline ? "#22c55e" : "#f59e0b";
     });
 
+    // --- AUTOMATIC PRICE CALCULATION ENGINES ---
+    function calcAddPrice() {
+      const l = parseFloat(document.getElementById("add-ply-l").value) || 0;
+      const w = parseFloat(document.getElementById("add-ply-w").value) || 0;
+      const r = parseFloat(document.getElementById("add-ply-rate").value) || 0;
+      if (l && w && r) {
+        document.getElementById("add-price").value = Math.round(l * w * r);
+      }
+    }
+
+    function calcDoorAddPrice() {
+      const w = parseFloat(document.getElementById("add-door-w").value) || 0;
+      const h = parseFloat(document.getElementById("add-door-h").value) || 0;
+      const r = parseFloat(document.getElementById("add-door-rate").value) || 0;
+      if (w && h && r) {
+        document.getElementById("add-price").value = Math.round(((w * h) / 144) * r);
+      }
+    }
+
+    function calcHardPrice() {
+      const r = parseFloat(document.getElementById("add-hard-rate").value) || 0;
+      document.getElementById("add-price").value = r;
+    }
+
+    function recalcEditPrice() {
+      const type = document.getElementById("edit-type").value;
+      const d1 = parseFloat(document.getElementById("edit-dim-1").value) || 0;
+      const d2 = parseFloat(document.getElementById("edit-dim-2").value) || 0;
+      const r = parseFloat(document.getElementById("edit-rate-val").value) || 0;
+
+      if (type === 'plywood') {
+        if (d1 && d2 && r) document.getElementById("edit-price").value = Math.round(d1 * d2 * r);
+      } else if (type === 'door') {
+        if (d1 && d2 && r) document.getElementById("edit-price").value = Math.round(((d1 * d2) / 144) * r);
+      } else {
+        document.getElementById("edit-price").value = r;
+      }
+    }
+
     function setViewMode(mode) {
       currentView = mode;
       document.getElementById("btn-view-table").classList.toggle("active", mode === 'table');
@@ -381,13 +453,13 @@
       if (tab === 'pos') {
         document.getElementById('tab-pos').classList.remove('hidden');
         document.getElementById('tab-add').classList.add('hidden');
-        document.getElementById('cart-bar').classList.remove('hidden');
+        document.getElementById('cart-drawer').classList.remove('hidden');
         event.target.classList.add('active');
         applyFilters();
       } else {
         document.getElementById('tab-pos').classList.add('hidden');
         document.getElementById('tab-add').classList.remove('hidden');
-        document.getElementById('cart-bar').classList.add('hidden');
+        document.getElementById('cart-drawer').classList.add('hidden');
         event.target.classList.add('active');
       }
     }
@@ -400,25 +472,6 @@
       document.getElementById("add-price").value = "";
     }
 
-    function calcAddPrice() {
-      const l = parseFloat(document.getElementById("add-ply-l").value) || 0;
-      const w = parseFloat(document.getElementById("add-ply-w").value) || 0;
-      const r = parseFloat(document.getElementById("add-ply-rate").value) || 0;
-      if (l && w && r) document.getElementById("add-price").value = Math.round(l * w * r);
-    }
-
-    function calcDoorAddPrice() {
-      const w = parseFloat(document.getElementById("add-door-w").value) || 0;
-      const h = parseFloat(document.getElementById("add-door-h").value) || 0;
-      const r = parseFloat(document.getElementById("add-door-rate").value) || 0;
-      if (w && h && r) document.getElementById("add-price").value = Math.round(((w * h) / 144) * r);
-    }
-
-    function calcHardPrice() {
-      const r = parseFloat(document.getElementById("add-hard-rate").value) || 0;
-      document.getElementById("add-price").value = r;
-    }
-
     function saveItem() {
       const name = document.getElementById("add-name").value;
       const type = document.getElementById("add-type").value;
@@ -427,35 +480,41 @@
       const stock = parseInt(document.getElementById("add-stock").value);
 
       if (!name || isNaN(price) || isNaN(stock)) {
-        alert("Please fill all required item details.");
+        alert("Please enter dimensions/rates to calculate price and stock.");
         return;
       }
 
-      let dimension = "-", area = "-", rateStr = "-";
+      let l = 0, w = 0, dimension = "-", area = "-", rateStr = "-", rateVal = 0, purchaseRate = 0;
+
       if (type === "plywood") {
-        const l = document.getElementById("add-ply-l").value;
-        const w = document.getElementById("add-ply-w").value;
-        const r = document.getElementById("add-ply-rate").value;
+        l = parseFloat(document.getElementById("add-ply-l").value);
+        w = parseFloat(document.getElementById("add-ply-w").value);
+        rateVal = parseFloat(document.getElementById("add-ply-rate").value);
+        purchaseRate = parseFloat(document.getElementById("add-ply-pur-rate").value) || 0;
         dimension = `${l}x${w}`;
         area = `${l * w} sq.ft`;
-        rateStr = `₹${r}/sqft`;
+        rateStr = `₹${rateVal}/sqft`;
       } else if (type === "door") {
-        const w = document.getElementById("add-door-w").value;
-        const h = document.getElementById("add-door-h").value;
-        const r = document.getElementById("add-door-rate").value;
-        dimension = `${w}"x${h}"`;
-        area = `${((w * h) / 144).toFixed(2)} sq.ft`;
-        rateStr = `₹${r}/sqft`;
+        l = parseFloat(document.getElementById("add-door-w").value);
+        w = parseFloat(document.getElementById("add-door-h").value);
+        rateVal = parseFloat(document.getElementById("add-door-rate").value);
+        purchaseRate = parseFloat(document.getElementById("add-door-pur-rate").value) || 0;
+        dimension = `${l}"x${w}"`;
+        area = `${((l * w) / 144).toFixed(2)} sq.ft`;
+        rateStr = `₹${rateVal}/sqft`;
       } else {
         const u = document.getElementById("add-hard-unit").value;
-        const r = document.getElementById("add-hard-rate").value;
+        rateVal = parseFloat(document.getElementById("add-hard-rate").value);
+        purchaseRate = parseFloat(document.getElementById("add-hard-pur-rate").value) || 0;
         dimension = "-";
         area = `1 ${u}`;
-        rateStr = `₹${r}/${u}`;
+        rateStr = `₹${rateVal}/${u}`;
       }
 
-      db.collection("inventory").add({ name, type, grade, dimension, area, rateStr, price, stock }).then(() => {
-        alert("Item saved and synced to all devices!");
+      db.collection("inventory").add({
+        name, type, grade, l, w, dimension, area, purchaseRate, rateVal, rateStr, price, stock
+      }).then(() => {
+        alert("Item added to inventory!");
         document.getElementById("add-name").value = "";
         document.getElementById("add-price").value = "";
         document.getElementById("add-stock").value = "";
@@ -463,15 +522,18 @@
       });
     }
 
-    // --- EDIT & DELETE FUNCTIONALITY ---
+    // --- EDIT MODAL ---
     function openEditModal(id) {
       const item = inventory.find(i => i.id === id);
       if (!item) return;
       document.getElementById("edit-id").value = item.id;
+      document.getElementById("edit-type").value = item.type || "plywood";
       document.getElementById("edit-name").value = item.name;
       document.getElementById("edit-grade").value = item.grade || "";
-      document.getElementById("edit-dim").value = item.dimension || "";
-      document.getElementById("edit-rate").value = item.rateStr || "";
+      document.getElementById("edit-dim-1").value = item.l || "";
+      document.getElementById("edit-dim-2").value = item.w || "";
+      document.getElementById("edit-pur-price").value = item.purchaseRate || 0;
+      document.getElementById("edit-rate-val").value = item.rateVal || 0;
       document.getElementById("edit-price").value = item.price || 0;
       document.getElementById("edit-stock").value = item.stock || 0;
       document.getElementById("edit-modal").classList.remove("hidden");
@@ -483,26 +545,40 @@
 
     function submitEdit() {
       const id = document.getElementById("edit-id").value;
+      const type = document.getElementById("edit-type").value;
       const name = document.getElementById("edit-name").value;
       const grade = document.getElementById("edit-grade").value;
-      const dimension = document.getElementById("edit-dim").value;
-      const rateStr = document.getElementById("edit-rate").value;
+      const l = parseFloat(document.getElementById("edit-dim-1").value) || 0;
+      const w = parseFloat(document.getElementById("edit-dim-2").value) || 0;
+      const purchaseRate = parseFloat(document.getElementById("edit-pur-price").value) || 0;
+      const rateVal = parseFloat(document.getElementById("edit-rate-val").value) || 0;
       const price = parseFloat(document.getElementById("edit-price").value) || 0;
       const stock = parseInt(document.getElementById("edit-stock").value) || 0;
 
+      let dimension = "-", area = "-", rateStr = "-";
+      if (type === 'plywood') {
+        dimension = `${l}x${w}`;
+        area = `${l * w} sq.ft`;
+        rateStr = `₹${rateVal}/sqft`;
+      } else if (type === 'door') {
+        dimension = `${l}"x${w}"`;
+        area = `${((l * w) / 144).toFixed(2)} sq.ft`;
+        rateStr = `₹${rateVal}/sqft`;
+      } else {
+        rateStr = `₹${rateVal}/Unit`;
+      }
+
       db.collection("inventory").doc(id).update({
-        name, grade, dimension, rateStr, price, stock
+        name, grade, l, w, dimension, area, purchaseRate, rateVal, rateStr, price, stock
       }).then(() => {
         closeEditModal();
-        alert("Item updated successfully!");
+        alert("Updated successfully!");
       });
     }
 
     function deleteItem(id, name) {
-      if (confirm(`Are you sure you want to delete "${name}" from stock?`)) {
-        db.collection("inventory").doc(id).delete().then(() => {
-          alert("Item deleted!");
-        });
+      if (confirm(`Delete "${name}" from stock?`)) {
+        db.collection("inventory").doc(id).delete();
       }
     }
 
@@ -553,7 +629,7 @@
       filtered.forEach(item => {
         let badgeClass = item.type === 'plywood' ? 'badge-ply' : item.type === 'door' ? 'badge-door' : 'badge-hard';
 
-        // 1. Render Table Rows
+        // Table Rows
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><strong>${item.name}</strong></td>
@@ -565,7 +641,7 @@
           <td><span class="stock-tag ${item.stock <= 5 ? 'low' : ''}">${item.stock} in stock</span></td>
           <td>
             <div class="action-group">
-              <button class="btn-add" onclick="addToBill('${item.id}')">+ Add</button>
+              <button class="btn-add" onclick="changeCartQty('${item.id}', 1)">+ Add</button>
               <button class="btn-edit" onclick="openEditModal('${item.id}')">✏️</button>
               <button class="btn-del" onclick="deleteItem('${item.id}', '${item.name}')">🗑️</button>
             </div>
@@ -573,20 +649,20 @@
         `;
         tbody.appendChild(tr);
 
-        // 2. Render Clickable Touch Grid Cards
+        // Grid Button Tiles
         const card = document.createElement("div");
         card.className = "item-card-btn";
         card.innerHTML = `
-          <div onclick="addToBill('${item.id}')">
+          <div>
             <span class="badge ${badgeClass}" style="margin-bottom: 6px;">${item.grade}</span>
             <div class="card-title">${item.name}</div>
-            <div class="card-meta">Size: <strong>${item.dimension}</strong> | ${item.area}</div>
-            <div class="card-meta">${item.rateStr}</div>
+            <div class="card-meta">Size: <strong>${item.dimension}</strong> (${item.area})</div>
+            <div class="card-meta">Rate: ${item.rateStr}</div>
             <div class="card-price">₹${item.price}</div>
             <div class="stock-tag ${item.stock <= 5 ? 'low' : ''}" style="font-size:0.75rem;">Stock: ${item.stock}</div>
           </div>
           <div style="display:flex; justify-content:space-between; margin-top: 10px; border-top: 1px solid #f1f5f9; padding-top: 6px;">
-            <button class="btn-add" style="flex:1; margin-right:4px;" onclick="addToBill('${item.id}')">+ Add Bill</button>
+            <button class="btn-add" style="flex:1; margin-right:4px;" onclick="changeCartQty('${item.id}', 1)">+ Add</button>
             <button class="btn-edit" onclick="openEditModal('${item.id}')">✏️</button>
             <button class="btn-del" style="margin-left:4px;" onclick="deleteItem('${item.id}', '${item.name}')">🗑️</button>
           </div>
@@ -595,17 +671,25 @@
       });
     }
 
-    function addToBill(id) {
+    // --- CART STEPPER (+ / - / CLEAR) ---
+    function changeCartQty(id, delta) {
       const item = inventory.find(i => i.id === id);
-      if (!item || item.stock <= 0) {
-        alert("Item is out of stock!");
-        return;
-      }
-      if (cart[id]) {
-        if (cart[id].qty < item.stock) cart[id].qty++;
-        else alert("Cannot exceed current stock!");
+      if (!item) return;
+
+      if (!cart[id]) {
+        if (delta > 0) {
+          if (item.stock < 1) { alert("Item is out of stock!"); return; }
+          cart[id] = { ...item, qty: 1 };
+        }
       } else {
-        cart[id] = { ...item, qty: 1 };
+        cart[id].qty += delta;
+        if (cart[id].qty > item.stock) {
+          cart[id].qty = item.stock;
+          alert("Cannot exceed available store stock!");
+        }
+        if (cart[id].qty <= 0) {
+          delete cart[id];
+        }
       }
       updateCartDisplay();
     }
@@ -616,11 +700,37 @@
     }
 
     function updateCartDisplay() {
+      const list = document.getElementById("cart-items-list");
+      list.innerHTML = "";
       let total = 0, count = 0;
-      for (let id in cart) {
-        total += cart[id].price * cart[id].qty;
-        count += cart[id].qty;
+      const keys = Object.keys(cart);
+
+      if (keys.length === 0) {
+        list.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:6px; font-size:0.8rem;">Tap '+ Add' on items to start billing</div>`;
+      } else {
+        keys.forEach(id => {
+          const item = cart[id];
+          const lineTotal = item.price * item.qty;
+          total += lineTotal;
+          count += item.qty;
+
+          const row = document.createElement("div");
+          row.className = "cart-row";
+          row.innerHTML = `
+            <div>
+              <strong>${item.name}</strong> <span style="color:#64748b;">(${item.dimension})</span>
+              <div style="font-size:0.75rem; color:#64748b;">₹${item.price} each = <strong>₹${lineTotal}</strong></div>
+            </div>
+            <div class="qty-controls">
+              <button class="qty-btn" onclick="changeCartQty('${id}', -1)">-</button>
+              <strong style="min-width:18px; text-align:center;">${item.qty}</strong>
+              <button class="qty-btn" onclick="changeCartQty('${id}', 1)">+</button>
+            </div>
+          `;
+          list.appendChild(row);
+        });
       }
+
       document.getElementById("cart-total-amount").innerText = `₹${total}`;
       document.getElementById("cart-item-count").innerText = `${count} items in bill`;
     }
@@ -637,7 +747,7 @@
       let y = 18;
 
       doc.setFontSize(15);
-      doc.text("TIMBER & HARDWARE INVOICE", 14, y);
+      doc.text("TIMBER & HARDWARE STORE INVOICE", 14, y);
       y += 8;
       doc.setFontSize(9);
       doc.text(`Date: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 14, y);
@@ -685,10 +795,11 @@
       batch.commit().then(() => {
         cart = {};
         updateCartDisplay();
-        alert("Invoice generated and stock updated on all connected devices!");
+        alert("Invoice created and stock synced across all devices!");
       });
     }
   </script>
 </body>
 </html>
+
 
