@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Timber & Hardware Manager</title>
+  <title>Timber & Hardware Manager Pro</title>
   
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -31,9 +31,12 @@
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 140px; }
 
-    header { background: var(--primary); color: white; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 30; }
-    header h1 { font-size: 1.15rem; font-weight: 700; }
-    .status-badge { font-size: 0.75rem; background: #22c55e; color: white; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+    header { background: var(--primary); color: white; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 30; }
+    header h1 { font-size: 1.1rem; font-weight: 700; }
+    .header-right { display: flex; align-items: center; gap: 8px; }
+    .role-badge { font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.4); }
+    .role-owner { background: #f59e0b; color: #000; }
+    .role-worker { background: #3b82f6; color: #fff; }
     
     .nav-tabs { display: flex; background: white; border-bottom: 1px solid var(--border); overflow-x: auto; }
     .nav-tab { flex: 1; padding: 12px 6px; border: none; background: none; font-weight: 600; font-size: 0.88rem; color: var(--text-muted); border-bottom: 3px solid transparent; text-align: center; white-space: nowrap; cursor: pointer; }
@@ -42,7 +45,7 @@
     .container { padding: 14px; max-width: 1200px; margin: 0 auto; }
     .hidden { display: none !important; }
 
-    /* Filter & Controls */
+    /* Controls & Filters */
     .filter-section { background: white; padding: 12px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 12px; }
     .top-controls { display: flex; gap: 8px; margin-bottom: 10px; }
     .search-input { flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; }
@@ -65,14 +68,14 @@
     td { padding: 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
     tr:hover { background: #f8fafc; }
 
-    /* Button Grid View */
+    /* Grid View */
     .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
     .item-card-btn { background: white; border: 1.5px solid var(--border); border-radius: 12px; padding: 12px; text-align: left; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
     .card-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; line-height: 1.2; }
     .card-meta { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px; }
     .card-price { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 6px; }
 
-    /* Action Buttons */
+    /* Buttons */
     .action-group { display: flex; gap: 4px; align-items: center; }
     .btn-add { background: var(--primary); color: white; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; cursor: pointer; }
     .btn-restock { background: #dcfce7; color: #166534; border: 1px solid #86efac; padding: 6px 8px; border-radius: 6px; font-weight: 600; font-size: 0.78rem; cursor: pointer; }
@@ -86,7 +89,7 @@
     .stock-tag { font-weight: 700; color: #15803d; }
     .stock-tag.low { color: #b91c1c; }
 
-    /* Summary KPI Cards */
+    /* Summary KPIs */
     .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 12px; }
     .kpi-card { background: white; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border); }
     .kpi-title { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
@@ -120,16 +123,19 @@
 
   <header>
     <h1>Timber & Hardware Manager</h1>
-    <span class="status-badge" id="sync-status">Connecting...</span>
+    <div class="header-right">
+      <span class="role-badge role-worker" id="role-indicator" onclick="toggleRoleModal()">Worker Mode 🔒</span>
+    </div>
   </header>
 
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="switchNav('pos')">Point of Sale (POS)</button>
-    <button class="nav-tab" onclick="switchNav('ledger')">Sales & Purchase History</button>
-    <button class="nav-tab" onclick="switchNav('add')">Add New Item</button>
+    <button class="nav-tab owner-only hidden" id="tab-btn-ledger" onclick="switchNav('ledger')">Ledger & History</button>
+    <button class="nav-tab owner-only hidden" id="tab-btn-add" onclick="switchNav('add')">Add Item</button>
+    <button class="nav-tab owner-only hidden" id="tab-btn-backup" onclick="switchNav('backup')">Backup & Restore</button>
   </div>
 
-  <!-- TAB 1: POS Screen -->
+  <!-- TAB 1: POS Screen (Accessible to Worker & Owner) -->
   <div id="tab-pos" class="container">
     <div class="filter-section">
       <div class="top-controls">
@@ -140,17 +146,15 @@
         </div>
       </div>
       
-      <!-- Customizable Category Pills -->
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
         <label style="font-size:0.75rem; color:var(--text-muted);">CATEGORIES & GRADES</label>
-        <button class="pill-add-btn" title="Add Custom Category" onclick="addCustomFilter('category')">+</button>
+        <button class="pill-add-btn owner-only hidden" title="Add Custom Category" onclick="addCustomFilter('category')">+</button>
       </div>
       <div class="pill-scroll" id="category-pills" style="margin-bottom: 10px;"></div>
 
-      <!-- Customizable Size Pills -->
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
         <label style="font-size:0.75rem; color:var(--text-muted);">QUICK SIZE FILTER</label>
-        <button class="pill-add-btn" title="Add Custom Size" onclick="addCustomFilter('size')">+</button>
+        <button class="pill-add-btn owner-only hidden" title="Add Custom Size" onclick="addCustomFilter('size')">+</button>
       </div>
       <div class="pill-scroll" id="size-pills"></div>
     </div>
@@ -180,9 +184,8 @@
     <div id="wrapper-grid-view" class="grid-view hidden"></div>
   </div>
 
-  <!-- TAB 2: HISTORY & LEDGER TAB -->
+  <!-- TAB 2: HISTORY & LEDGER (Owner Only) -->
   <div id="tab-ledger" class="container hidden">
-    <!-- KPI Overview -->
     <div class="summary-grid">
       <div class="kpi-card">
         <div class="kpi-title">Total Sales</div>
@@ -198,7 +201,6 @@
       </div>
     </div>
 
-    <!-- History Filters & Search -->
     <div class="filter-section">
       <div class="top-controls">
         <input type="text" id="ledger-search" class="search-input" placeholder="Search Customer / Supplier / Product..." oninput="applyLedgerFilters()" />
@@ -232,7 +234,6 @@
       </div>
     </div>
 
-    <!-- History Table -->
     <div class="table-card">
       <div class="table-wrap">
         <table>
@@ -240,9 +241,9 @@
             <tr>
               <th>Date & Time</th>
               <th>Type</th>
-              <th>Party (Customer / Supplier)</th>
-              <th>Items & Breakdown</th>
-              <th>Quantity</th>
+              <th>Party</th>
+              <th>Items</th>
+              <th>Qty</th>
               <th>Total Amount</th>
             </tr>
           </thead>
@@ -252,10 +253,10 @@
     </div>
   </div>
 
-  <!-- TAB 3: Add Inventory Item -->
+  <!-- TAB 3: Add Inventory Item (Owner Only) -->
   <div id="tab-add" class="container hidden">
     <div class="form-box">
-      <h2 style="font-size: 1.1rem; margin-bottom: 14px;">Add New Item</h2>
+      <h2 style="font-size: 1.1rem; margin-bottom: 14px;">Add New Inventory Item</h2>
       
       <div class="form-group">
         <label>Item Name</label>
@@ -352,6 +353,36 @@
     </div>
   </div>
 
+  <!-- TAB 4: BACKUP & RESTORE (Owner Only) -->
+  <div id="tab-backup" class="container hidden">
+    <div class="form-box">
+      <h2 style="font-size: 1.1rem; margin-bottom: 8px;">Backup & Restore Data</h2>
+      <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:16px;">
+        Daily auto-backup runs in the background. You can also manually download a full snapshot or restore from an earlier backup file anytime.
+      </p>
+
+      <div style="background:#f1f5f9; padding:14px; border-radius:8px; margin-bottom:16px;">
+        <strong>1. Manual Phone Backup</strong>
+        <p style="font-size:0.78rem; color:var(--text-muted); margin:4px 0 10px 0;">Downloads all products, prices, stock, and complete transaction ledger into a single JSON file.</p>
+        <button class="btn" style="background:var(--success); width:100%;" onclick="exportDataManual()">⬇️ Download Backup File</button>
+      </div>
+
+      <div style="background:#f1f5f9; padding:14px; border-radius:8px; margin-bottom:16px;">
+        <strong>2. Restore from Backup File</strong>
+        <p style="font-size:0.78rem; color:var(--text-muted); margin:4px 0 10px 0;">Select a previously downloaded backup JSON file to restore all lost inventory and transactions.</p>
+        <input type="file" id="restore-file-input" accept=".json" style="margin-bottom:10px;" />
+        <button class="btn btn-danger" style="width:100%;" onclick="restoreDataManual()">⬆️ Restore Database</button>
+      </div>
+
+      <div style="background:#f1f5f9; padding:14px; border-radius:8px;">
+        <strong>3. Change Owner PIN</strong>
+        <p style="font-size:0.78rem; color:var(--text-muted); margin:4px 0 10px 0;">Current default PIN is <strong>1234</strong>.</p>
+        <input type="password" id="new-pin-input" placeholder="Enter new 4-digit PIN" style="margin-bottom:10px;" />
+        <button class="btn" style="width:100%;" onclick="updateOwnerPin()">Update Security PIN</button>
+      </div>
+    </div>
+  </div>
+
   <!-- RESTOCK QUICK MODAL -->
   <div id="restock-modal" class="modal-overlay hidden">
     <div class="modal-card">
@@ -429,7 +460,22 @@
     </div>
   </div>
 
-  <!-- CHECKOUT / CUSTOMER NAME MODAL -->
+  <!-- ROLE TOGGLE MODAL -->
+  <div id="role-modal" class="modal-overlay hidden">
+    <div class="modal-card" style="max-width:340px; text-align:center;">
+      <h3 style="margin-bottom: 8px; font-size: 1.15rem;">Switch Mode</h3>
+      <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:14px;" id="role-modal-desc">
+        Enter 4-digit Owner PIN to unlock full management controls.
+      </p>
+      <input type="password" id="owner-pin-input" placeholder="Enter PIN (Default: 1234)" style="text-align:center; font-size:1.2rem; letter-spacing:4px; margin-bottom:14px;" maxlength="8" />
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-danger" style="flex:1;" onclick="closeRoleModal()">Cancel</button>
+        <button class="btn" style="flex:1;" onclick="verifyOwnerPin()">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKOUT MODAL -->
   <div id="checkout-modal" class="modal-overlay hidden">
     <div class="modal-card">
       <h3 style="margin-bottom: 12px; font-size: 1.1rem;">Customer & Billing Details</h3>
@@ -478,7 +524,65 @@
     const db = firebase.firestore();
     db.enablePersistence({ synchronizeTabs: true }).catch(err => console.warn(err));
 
-    // --- 2. DEFAULT CONFIG & FILTER PILLS ---
+    // --- 2. SECURITY ROLES (OWNER vs WORKER) ---
+    let currentRole = 'worker'; // default to worker for safety
+    let ownerPin = localStorage.getItem('pos_owner_pin') || '1234';
+
+    function setRole(role) {
+      currentRole = role;
+      const indicator = document.getElementById("role-indicator");
+      if (role === 'owner') {
+        indicator.innerText = "Owner Mode 🔓";
+        indicator.className = "role-badge role-owner";
+        document.querySelectorAll(".owner-only").forEach(el => el.classList.remove("hidden"));
+      } else {
+        indicator.innerText = "Worker Mode 🔒";
+        indicator.className = "role-badge role-worker";
+        document.querySelectorAll(".owner-only").forEach(el => el.classList.add("hidden"));
+        if (!document.getElementById('tab-pos').classList.contains('hidden') === false) {
+          switchNav('pos');
+        }
+      }
+      applyFilters();
+    }
+
+    function toggleRoleModal() {
+      if (currentRole === 'owner') {
+        if (confirm("Switch back to restricted Worker Mode?")) setRole('worker');
+      } else {
+        document.getElementById("owner-pin-input").value = "";
+        document.getElementById("role-modal").classList.remove("hidden");
+      }
+    }
+
+    function closeRoleModal() {
+      document.getElementById("role-modal").classList.add("hidden");
+    }
+
+    function verifyOwnerPin() {
+      const pin = document.getElementById("owner-pin-input").value;
+      if (pin === ownerPin) {
+        closeRoleModal();
+        setRole('owner');
+        alert("Owner Mode Unlocked! All administrative options are now available.");
+      } else {
+        alert("Incorrect PIN. Please try again.");
+      }
+    }
+
+    function updateOwnerPin() {
+      const newPin = document.getElementById("new-pin-input").value.trim();
+      if (newPin.length < 4) {
+        alert("Please enter a PIN with at least 4 digits.");
+        return;
+      }
+      ownerPin = newPin;
+      localStorage.setItem('pos_owner_pin', newPin);
+      document.getElementById("new-pin-input").value = "";
+      alert("Owner security PIN updated successfully!");
+    }
+
+    // --- 3. PRELOAD CATALOG & DATA STATE ---
     let categoriesList = ['ALL', 'Marine / BWP', 'MR Grade', 'Door', 'Hardware'];
     let sizesList = ['ALL', '8x4', '7x4', '6x4', '7x3', '6x3', '8x3', '6x2.5'];
 
@@ -500,7 +604,7 @@
     let activeSize = 'ALL';
     let currentView = 'table';
 
-    // --- 3. LIVE FIRESTORE LISTENERS ---
+    // --- 4. CLOUD LISTENERS ---
     db.collection("inventory").onSnapshot(snapshot => {
       if (snapshot.empty) {
         const batch = db.batch();
@@ -513,6 +617,7 @@
         inventory = [];
         snapshot.forEach(doc => inventory.push({ id: doc.id, ...doc.data() }));
         applyFilters();
+        checkDailyAutoBackup();
       }
     });
 
@@ -522,15 +627,76 @@
       applyLedgerFilters();
     });
 
-    // Check Cloud Status
-    setInterval(() => {
-      const isOnline = navigator.onLine;
-      const status = document.getElementById("sync-status");
-      status.innerText = isOnline ? "Live Synced" : "Offline Cached";
-      status.style.background = isOnline ? "#22c55e" : "#f59e0b";
-    }, 2000);
+    // --- 5. AUTOMATIC DAILY BACKUP ENGINE ---
+    function checkDailyAutoBackup() {
+      const today = new Date().toISOString().slice(0, 10);
+      const lastBackup = localStorage.getItem("last_auto_backup_date");
+      if (lastBackup !== today && inventory.length > 0) {
+        localStorage.setItem("last_auto_backup_date", today);
+        setTimeout(() => {
+          exportDataSilent(`auto_timber_backup_${today}.json`);
+        }, 3000);
+      }
+    }
 
-    // Render Pills on Boot
+    function exportDataSilent(filename) {
+      const backupObj = { timestamp: new Date().toISOString(), inventory, transactions };
+      const blob = new Blob([JSON.stringify(backupObj, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+    }
+
+    function exportDataManual() {
+      const today = new Date().toISOString().slice(0, 10);
+      exportDataSilent(`manual_timber_backup_${today}_${Date.now()}.json`);
+      alert("Backup JSON file saved to your phone Files / Downloads folder!");
+    }
+
+    function restoreDataManual() {
+      const fileInput = document.getElementById("restore-file-input");
+      if (!fileInput.files[0]) {
+        alert("Please choose a valid .json backup file first.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (!parsed.inventory && !Array.isArray(parsed)) {
+            alert("Invalid backup file format.");
+            return;
+          }
+
+          if (confirm("Restore all items and transactions from this file? This will merge and update your database.")) {
+            const batch = db.batch();
+            const itemsToRestore = parsed.inventory || parsed;
+            itemsToRestore.forEach(item => {
+              const ref = item.id ? db.collection("inventory").doc(item.id) : db.collection("inventory").doc();
+              batch.set(ref, item);
+            });
+
+            if (parsed.transactions && Array.isArray(parsed.transactions)) {
+              parsed.transactions.forEach(t => {
+                const ref = t.id ? db.collection("transactions").doc(t.id) : db.collection("transactions").doc();
+                batch.set(ref, t);
+              });
+            }
+
+            batch.commit().then(() => {
+              alert("Database restored successfully from backup!");
+            });
+          }
+        } catch (err) {
+          alert("Error reading backup file: " + err.message);
+        }
+      };
+      reader.readAsText(fileInput.files[0]);
+    }
+
+    // --- 6. NAVIGATION & FILTER PILLS ---
     function renderFilterPills() {
       const catContainer = document.getElementById("category-pills");
       catContainer.innerHTML = "";
@@ -563,12 +729,12 @@
       }
     }
 
-    // --- NAVIGATION ---
     function switchNav(tab) {
       document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
       document.getElementById('tab-pos').classList.toggle('hidden', tab !== 'pos');
       document.getElementById('tab-ledger').classList.toggle('hidden', tab !== 'ledger');
       document.getElementById('tab-add').classList.toggle('hidden', tab !== 'add');
+      document.getElementById('tab-backup').classList.toggle('hidden', tab !== 'backup');
       document.getElementById('cart-drawer').classList.toggle('hidden', tab !== 'pos');
       event.target.classList.add('active');
 
@@ -677,7 +843,7 @@
       });
     }
 
-    // --- RESTOCK QUICK MODAL ---
+    // --- RESTOCK & EDIT ---
     function openRestockModal(id) {
       const item = inventory.find(i => i.id === id);
       if (!item) return;
@@ -711,7 +877,6 @@
       const itemRef = db.collection("inventory").doc(id);
       batch.update(itemRef, { stock: firebase.firestore.FieldValue.increment(qty) });
 
-      // Log Purchase Transaction
       const txRef = db.collection("transactions").doc();
       batch.set(txRef, {
         type: "PURCHASE",
@@ -729,7 +894,6 @@
       });
     }
 
-    // --- EDIT & DELETE ---
     function openEditModal(id) {
       const item = inventory.find(i => i.id === id);
       if (!item) return;
@@ -787,7 +951,7 @@
       if (confirm(`Delete "${name}" from stock?`)) db.collection("inventory").doc(id).delete();
     }
 
-    // --- POS FILTERING ---
+    // --- POS FILTERING & ROLE VISIBILITY ---
     function applyFilters() {
       const query = document.getElementById("search-box").value.toLowerCase();
       const tbody = document.getElementById("inventory-table-body");
@@ -834,9 +998,11 @@
           <td>
             <div class="action-group">
               <button class="btn-add" onclick="changeCartQty('${item.id}', 1)">+ Add</button>
-              <button class="btn-restock" onclick="openRestockModal('${item.id}')">➕ Stock</button>
-              <button class="btn-edit" onclick="openEditModal('${item.id}')">✏️</button>
-              <button class="btn-del" onclick="deleteItem('${item.id}', '${item.name}')">🗑️</button>
+              ${currentRole === 'owner' ? `
+                <button class="btn-restock" onclick="openRestockModal('${item.id}')">➕ Stock</button>
+                <button class="btn-edit" onclick="openEditModal('${item.id}')">✏️</button>
+                <button class="btn-del" onclick="deleteItem('${item.id}', '${item.name}')">🗑️</button>
+              ` : ''}
             </div>
           </td>
         `;
@@ -855,14 +1021,14 @@
             <div class="stock-tag ${item.stock <= 5 ? 'low' : ''}" style="font-size:0.75rem;">Stock: ${item.stock}</div>
           </div>
           <div style="display:flex; flex-direction:column; gap:6px; margin-top: 10px; border-top: 1px solid #f1f5f9; padding-top: 6px;">
-            <div style="display:flex; gap:4px;">
-              <button class="btn-add" style="flex:1;" onclick="changeCartQty('${item.id}', 1)">+ Bill</button>
-              <button class="btn-restock" style="flex:1;" onclick="openRestockModal('${item.id}')">➕ Stock</button>
-            </div>
-            <div style="display:flex; justify-content:flex-end; gap:4px;">
-              <button class="btn-edit" onclick="openEditModal('${item.id}')">✏️</button>
-              <button class="btn-del" onclick="deleteItem('${item.id}', '${item.name}')">🗑️</button>
-            </div>
+            <button class="btn-add" onclick="changeCartQty('${item.id}', 1)">+ Add to Bill</button>
+            ${currentRole === 'owner' ? `
+              <div style="display:flex; justify-content:space-between; gap:4px;">
+                <button class="btn-restock" style="flex:1;" onclick="openRestockModal('${item.id}')">➕ Stock</button>
+                <button class="btn-edit" onclick="openEditModal('${item.id}')">✏️</button>
+                <button class="btn-del" onclick="deleteItem('${item.id}', '${item.name}')">🗑️</button>
+              </div>
+            ` : ''}
           </div>
         `;
         grid.appendChild(card);
@@ -940,7 +1106,6 @@
       document.getElementById("checkout-modal").classList.add("hidden");
     }
 
-    // --- CHECKOUT & TRANSACTION RECORDING ---
     function confirmAndPrintBill() {
       const customer = document.getElementById("customer-name").value || "Cash Customer";
       const phone = document.getElementById("customer-phone").value || "-";
@@ -951,7 +1116,7 @@
       let y = 18;
 
       doc.setFontSize(16);
-      doc.text("TIMBER & HARDWARE INVOICE", 14, y);
+      doc.text("TIMBER & HARDWARE STORE INVOICE", 14, y);
       y += 7;
       doc.setFontSize(9);
       doc.text(`Customer: ${customer} | Ph: ${phone}`, 14, y);
@@ -990,7 +1155,6 @@
         doc.text(`Rs. ${lineTotal}`, 175, y);
         y += 7;
 
-        // Deduct inventory
         const docRef = db.collection("inventory").doc(item.id);
         batch.update(docRef, { stock: firebase.firestore.FieldValue.increment(-item.qty) });
       });
@@ -1001,7 +1165,6 @@
       doc.setFontSize(11);
       doc.text(`Grand Total: Rs. ${grandTotal}`, 135, y);
 
-      // Save Sale Transaction in Firestore
       const txRef = db.collection("transactions").doc();
       batch.set(txRef, {
         type: "SALE",
@@ -1023,7 +1186,7 @@
       });
     }
 
-    // --- LEDGER / HISTORY FILTER & SORT ---
+    // --- LEDGER FILTER & SORT ---
     function applyLedgerFilters() {
       const query = (document.getElementById("ledger-search") ? document.getElementById("ledger-search").value : "").toLowerCase();
       const typeFilter = document.getElementById("ledger-type-filter") ? document.getElementById("ledger-type-filter").value : "ALL";
@@ -1045,7 +1208,6 @@
         return matchSearch && matchType && matchDate;
       });
 
-      // Sorting
       filtered.sort((a, b) => {
         if (sortBy === 'date-desc') return new Date(b.timestamp) - new Date(a.timestamp);
         if (sortBy === 'date-asc') return new Date(a.timestamp) - new Date(b.timestamp);
@@ -1055,7 +1217,6 @@
         return 0;
       });
 
-      // Calculate KPIs
       let totalSales = 0, totalPurchases = 0;
       transactions.forEach(t => {
         if (t.type === 'SALE') totalSales += t.totalAmount || 0;
@@ -1068,7 +1229,6 @@
         document.getElementById("kpi-gross-profit").innerText = `₹${(totalSales - totalPurchases).toLocaleString('en-IN')}`;
       }
 
-      // Render Ledger Table
       const tbody = document.getElementById("ledger-table-body");
       if (!tbody) return;
       tbody.innerHTML = "";
@@ -1095,9 +1255,13 @@
         tbody.appendChild(tr);
       });
     }
+
+    // Set initial role
+    setRole('worker');
   </script>
 </body>
 </html>
+
 
 
 
